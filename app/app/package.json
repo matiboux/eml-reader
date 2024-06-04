@@ -25,6 +25,7 @@
     "@astrojs/svelte": "^5.4.0",
     "@astrojs/tailwind": "^5.1.0",
     "@iconify-json/mdi": "^1.1.66",
+    "@iconify-json/twemoji": "^1.1.15",
     "@iconify/tailwind": "^1.1.1",
     "astro": "^4.9.2",
     "eml-parser": "^2.0.3",
