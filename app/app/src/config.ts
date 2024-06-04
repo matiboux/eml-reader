@@ -1,6 +1,6 @@
 interface Site
 {
-	title?: string
+	title: string
 	description?: string
 	author?: string
 	themeColor?: string
