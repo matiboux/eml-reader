@@ -1,0 +1,38 @@
+{
+  "name": "eml-reader",
+  "author": "Matiboux",
+  "license": "UNLICENSED",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "check": "astro check",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matiboux/eml-reader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/matiboux/eml-reader/issues"
+  },
+  "homepage": "https://github.com/matiboux/eml-reader#readme",
+  "dependencies": {
+    "@astrojs/svelte": "^5.0.3",
+    "@astrojs/tailwind": "^5.1.0",
+    "@iconify-json/mdi": "^1.1.64",
+    "@iconify/tailwind": "^0.1.4",
+    "@nanostores/persistent": "^0.9.1",
+    "astro": "^4.4.4",
+    "sass": "^1.70.0",
+    "svelte": "^4.2.9",
+    "tailwindcss": "^3.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6"
+  }
+}
