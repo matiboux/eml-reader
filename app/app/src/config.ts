@@ -1,10 +1,4 @@
-interface Site
-{
-	title: string
-	description?: string
-	author?: string
-	themeColor?: string
-}
+import type Site from '~/types/Site.d.ts'
 
 export const site: Site = {
 	title: 'EML Reader',
