@@ -1,6 +1,9 @@
 ---
 import { site } from '~/config'
 import Layout from '~/layouts/Layout.astro'
+
+import { i18nFactory } from '~/i18n'
+const _ = i18nFactory(Astro.currentLocale as any)
 ---
 
 <Layout
@@ -16,7 +19,7 @@ import Layout from '~/layouts/Layout.astro'
 			</div>
 			{site.description &&
 				<p class="text-gray-600">
-					{site.description}
+					{_(site.description)}
 				</p>
 			}
 		</div>
