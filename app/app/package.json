@@ -30,6 +30,7 @@
     "@iconify/tailwind": "^1.1.1",
     "astro": "^4.9.2",
     "buffer": "^6.0.3",
+    "eml-format": "^0.6.1",
     "eml-parser": "^2.0.3",
     "rfc2047": "^4.0.1",
     "sass": "^1.77.4",
