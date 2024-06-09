@@ -72,7 +72,7 @@ function handleMenuSelected(value: MenuOption)
 			<div class="paper paper-back">
 			</div>
 
-			<div class="paper paper-front">
+			<div class={`paper paper-front paper-${menuSelected}`}>
 				{#if menuSelected === 'headers'}
 					<div>
 						<a
@@ -99,7 +99,7 @@ function handleMenuSelected(value: MenuOption)
 					{#if $emlData.headers}
 						<hr />
 
-						<ul>
+						<ul class="list-styled">
 							{#each Object.entries($emlData.headers) as [key, value]}
 								<li>
 									<b>{key}:</b> {value}
@@ -109,11 +109,37 @@ function handleMenuSelected(value: MenuOption)
 					{/if}
 
 				{:else if menuSelected === 'attachments' && $emlData.attachments}
+					<div class="message message-warning">
+						<span class="icon icon-[mdi--warning]"></span>
+						<span>Careful! Make sure you trust the source before opening or downloading attachments.</span>
+					</div>
+
 					<!-- Attachments block -->
 					<ul>
 						{#each $emlData.attachments as attachment}
 							<li>
-								<b>{attachment.name}</b> ({attachment.contentType})
+								<!-- <b>{attachment.name}</b> ({attachment.contentType}) -->
+								<button
+									class="attachment-btn"
+								>
+									<div class="left">
+										{#if attachment.contentType.startsWith('image/')}
+											<span class="icon icon-[mdi--file-image]"></span>
+										{:else if attachment.contentType.startsWith('audio/')}
+											<span class="icon icon-[mdi--file-music]"></span>
+										{:else if attachment.contentType.startsWith('video/')}
+											<span class="icon icon-[mdi--file-video]"></span>
+										{:else if attachment.contentType.startsWith('application/pdf')}
+											<span class="icon icon-[mdi--file-pdf-box]"></span>
+										{:else}
+											<span class="icon icon-[mdi--file-download]"></span>
+										{/if}
+									</div>
+									<div class="right">
+										<div><b>{attachment.name}</b></div>
+										<div> ({attachment.contentType})</div>
+									</div>
+								</button>
 							</li>
 						{/each}
 					</ul>
@@ -206,6 +232,40 @@ function handleMenuSelected(value: MenuOption)
 		}
 	}
 
+	.message {
+		@apply
+			bg-gray-100
+			flex
+			items-center
+			gap-2
+			px-4
+			py-2
+			text-gray-600
+			rounded-md
+			;
+
+		.icon {
+			@apply
+				flex-shrink-0
+				text-xl
+				;
+		}
+
+		&.message-warning {
+			@apply
+				bg-orange-100
+				text-orange-600
+				;
+		}
+
+		&.message-error {
+			@apply
+				bg-red-100
+				text-red-600
+				;
+		}
+	}
+
 	.paper {
 		@apply
 			relative
@@ -252,12 +312,75 @@ function handleMenuSelected(value: MenuOption)
 			transition: margin-top 0.5s ease;
 		}
 
-		ul {
+		ul.list-styled {
 			@apply
 				list-disc
 				list-inside
 				;
 		}
 	}
+
+	.paper-attachments {
+		ul {
+			@apply
+				flex
+				flex-col
+				items-start
+				gap-4
+				;
+
+			&, > li {
+				@apply
+					w-full
+					;
+			}
+		}
+	}
+
+	.attachment-btn {
+		@apply
+			flex
+			items-center
+			justify-between
+			gap-2
+			bg-gray-200
+			w-full
+			px-4
+			py-2
+			text-left
+			text-gray-600
+			rounded-md
+			cursor-pointer
+			;
+
+		&:hover {
+			@apply
+				bg-gray-300
+				text-gray-800
+				;
+		}
+
+		> .left {
+			@apply
+				flex-shrink-0
+				text-2xl
+				;
+		}
+
+		> .right {
+			@apply
+				flex-grow
+				flex
+				flex-col
+				items-start
+				;
+		}
+	}
+}
+
+@import "~/styles/style.scss";
+
+span[class^="icon-"], span[class*=" icon-"] {
+	@extend .align-icon-inline;
 }
 </style>
