@@ -36,6 +36,36 @@ function handleMenuSelected(value: MenuOption)
 		}
 	}
 }
+
+function getDataHtml(emlData: Record<string, any>): string
+{
+	if (!emlData.html)
+	{
+		return `<pre>${emlData.text}</pre>`
+	}
+
+	let html = emlData.html
+
+	// Add base target to the HTML
+	html = html.replace(/<head>/, '<head><base target="_parent">')
+
+	const cidRegex = /\ssrc="cid:([^"]+)"/g
+	let match: RegExpExecArray | null
+	while ((match = cidRegex.exec(html)))
+	{
+		const cid = match[1]
+		const attachment = emlData.attachments.find((attachment: any) => attachment.id === `<${cid}>`)
+		console.log(emlData.attachments, cid, attachment)
+		if (attachment)
+		{
+			const contentType = attachment.contentType.split(';')[0]
+			console.log(`data:${contentType};base64,${attachment.data64}`)
+			html = html.replace(new RegExp(`\\ssrc="cid:${cid}"`, 'g'), ` src="data:${contentType};base64,${attachment.data64}"`)
+		}
+	}
+
+	return html
+}
 </script>
 
 <div
@@ -165,7 +195,7 @@ function handleMenuSelected(value: MenuOption)
 						<div class="grow">
 							<iframe
 								class="w-full h-full"
-								srcdoc={$emlData.html || `<pre>${$emlData.text}</pre>`}
+								srcdoc={getDataHtml($emlData)}
 							></iframe>
 						</div>
 					{/if}

@@ -55,11 +55,6 @@ async function onChange(event: Event)
 					return
 				}
 
-				if (data.html)
-				{
-					data.html = data.html.replace(/<head>/, '<head><base target="_parent">')
-				}
-
 				emlError = null
 				emlData.set(data)
 				console.log(error, data)
