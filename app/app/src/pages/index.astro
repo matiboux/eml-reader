@@ -31,7 +31,7 @@ const _ = i18nFactory(Astro.currentLocale as any)
 			<AppForm class="home text-black group-hover:text-gray mt-4" locale={Astro.currentLocale} client:load />
 		</div>
 
-		<AppContent class="home text-black group-hover:text-gray mt-4" locale={Astro.currentLocale} client:load />
+		<AppContent locale={Astro.currentLocale} client:load />
 
 		<Footer class="w-full" />
 	</div>
