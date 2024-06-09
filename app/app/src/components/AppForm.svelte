@@ -1,5 +1,7 @@
 <script lang="ts">
 import { readEml } from 'eml-parse-js'
+
+import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
 
 // Props
@@ -38,6 +40,7 @@ async function onChange(event: Event)
 				if (error)
 				{
 					emlError = error
+					openedAttachmentIndex.set(null)
 					emlData.set(null)
 					return
 				}
@@ -51,11 +54,13 @@ async function onChange(event: Event)
 				)
 				{
 					emlError = 'Invalid EML file'
+					openedAttachmentIndex.set(null)
 					emlData.set(null)
 					return
 				}
 
 				emlError = null
+				openedAttachmentIndex.set(null)
 				emlData.set(data)
 				console.log(error, data)
 			}
