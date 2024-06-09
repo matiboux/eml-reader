@@ -37,6 +37,12 @@ function handleMenuSelected(value: MenuOption)
 	}
 }
 
+function getAttachmentName(attachment: any): string
+{
+    var match = /(?:N|n)ame=(?:'|")?(.+?)(?:'|")?(\s*;[\s\S]*)?$/g.exec(attachment.contentType)
+	return unquoteString(match ? match[1] : attachment.name)
+}
+
 function getDataHtml(emlData: Record<string, any>): string
 {
 	if (!emlData.html)
@@ -55,11 +61,9 @@ function getDataHtml(emlData: Record<string, any>): string
 	{
 		const cid = match[1]
 		const attachment = emlData.attachments.find((attachment: any) => attachment.id === `<${cid}>`)
-		console.log(emlData.attachments, cid, attachment)
 		if (attachment)
 		{
 			const contentType = attachment.contentType.split(';')[0]
-			console.log(`data:${contentType};base64,${attachment.data64}`)
 			html = html.replace(new RegExp(`\\ssrc="cid:${cid}"`, 'g'), ` src="data:${contentType};base64,${attachment.data64}"`)
 		}
 	}
@@ -146,8 +150,7 @@ function getDataHtml(emlData: Record<string, any>): string
 										{/if}
 									</div>
 									<div class="right">
-										<div><b>{unquoteString(attachment.name)}</b> ({bytes.format(attachment.data.length)})</div>
-										<div> ({attachment.contentType})</div>
+										<div><b>{getAttachmentName(attachment)}</b> ({bytes.format(attachment.data.length)})</div>
 									</div>
 								</button>
 							</li>
