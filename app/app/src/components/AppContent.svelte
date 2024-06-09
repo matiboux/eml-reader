@@ -190,6 +190,21 @@ function handleMenuSelected(value: MenuOption)
 			space-x-4
 			;
 
+		.badge {
+			@apply
+				inline-block
+				bg-gray-300
+				min-w-[1.5rem]
+				px-1
+				py-0.5
+				text-sm
+				text-center
+				text-gray-600
+				rounded-full
+				align-middle
+				;
+		}
+
 		a {
 			@apply
 				bg-gray-200
@@ -207,22 +222,14 @@ function handleMenuSelected(value: MenuOption)
 					bg-gray-300
 					text-gray-800
 					;
-			}
-		}
 
-		.badge {
-			@apply
-				inline-block
-				bg-gray-400
-				min-w-[1.5rem]
-				px-1
-				py-0.5
-				text-sm
-				text-center
-				text-gray-800
-				rounded-full
-				align-middle
-				;
+				.badge {
+					@apply
+						bg-gray-400
+						text-gray-800
+						;
+				}
+			}
 		}
 	}
 
