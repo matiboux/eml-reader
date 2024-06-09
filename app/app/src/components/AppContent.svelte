@@ -76,7 +76,6 @@ function handleMenuSelected(value: MenuOption)
 				{#if menuSelected === 'headers'}
 					<div>
 						<a
-							class={menuSelected === 'body' ? 'active' : ''}
 							on:click={handleMenuSelected('body')}
 						>
 							See message body
@@ -89,7 +88,6 @@ function handleMenuSelected(value: MenuOption)
 
 						<div>
 							<a
-								class={menuSelected === 'attachments' ? 'active' : ''}
 								on:click={handleMenuSelected('attachments')}
 							>
 								See {$emlData.attachments.length} message attachment{#if $emlData.attachments.length > 1}s{/if}
@@ -166,13 +164,6 @@ function handleMenuSelected(value: MenuOption)
 			</div>
 		</div>
 	{/if}
-
-	<div class="papers-secondary">
-		{#if $emlData && $emlData.attachments}
-		 	{#each $emlData.attachments as attachment}
-			{/each}
-		{/if}
-	</div>
 </div>
 
 <style lang="scss">
@@ -269,42 +260,4 @@ function handleMenuSelected(value: MenuOption)
 		}
 	}
 }
-
-.btn {
-	@apply
-		bg-gray-400
-		enabled:hover:bg-gray-500
-		disabled:bg-gray-300
-		px-4
-		py-2
-		text-white
-		font-semibold
-		rounded-md
-		disabled:cursor-not-allowed
-		;
-
-	&.btn-primary {
-		@apply
-			bg-blue-500
-			enabled:hover:bg-blue-600
-			disabled:bg-blue-300
-			;
-	}
-}
-
-textarea {
-	@apply
-		border
-		border-gray-300
-		;
-
-	&.default {
-		@apply text-gray-600
-	}
-
-	&.error {
-		@apply border-red-600 text-red-600;
-	}
-}
-
 </style>
