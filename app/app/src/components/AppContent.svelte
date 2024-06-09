@@ -136,7 +136,10 @@ function handleMenuSelected(value: MenuOption)
 					{#if $emlData.to}
 						<div>
 							<b>To:</b>
-							{$emlData.to.name ? `${$emlData.to.name} <${$emlData.to.email}>` : $emlData.to.email}
+							{(Array.isArray($emlData.to)
+								? $emlData.to
+								: [$emlData.to]
+							).map(to => to.name ? `${to.name} <${to.email}>` : to.email).join(', ')}
 						</div>
 					{/if}
 
