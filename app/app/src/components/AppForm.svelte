@@ -1,5 +1,6 @@
 <script lang="ts">
 import { readEml } from 'eml-parse-js'
+import emlData from '~/stores/emlData'
 
 // Props
 let userClass: string | undefined = undefined
@@ -15,7 +16,6 @@ import { i18nFactory } from '~/i18n'
 const _ = i18nFactory(locale as any)
 
 let emlError: any = null
-let emlData: any = null
 
 async function onChange(event: Event)
 {
@@ -38,7 +38,7 @@ async function onChange(event: Event)
 				if (error)
 				{
 					emlError = error
-					emlData = null
+					emlData.set(null)
 					return
 				}
 
@@ -51,12 +51,12 @@ async function onChange(event: Event)
 				)
 				{
 					emlError = 'Invalid EML file'
-					emlData = null
+					emlData.set(null)
 					return
 				}
 
 				emlError = null
-				emlData = data
+				emlData.set(data)
 				console.log(error, data)
 			}
 		)
@@ -101,61 +101,6 @@ async function onChange(event: Event)
 			<b>Error:</b>
 			{emlError}
 		</div>
-	{/if}
-
-	{#if emlData}
-		<hr />
-
-		<!-- From block -->
-		{#if emlData.from}
-			<div>
-				<b>From:</b>
-				{emlData.from.name ? `${emlData.from.name} <${emlData.from.email}>` : emlData.from.email}
-			</div>
-
-			<hr />
-		{/if}
-
-		<!-- To block -->
-		{#if emlData.to}
-			<div>
-				<b>To:</b>
-				{emlData.to.name ? `${emlData.to.name} <${emlData.to.email}>` : emlData.to.email}
-			</div>
-
-			<hr />
-		{/if}
-
-		<!-- Subject block -->
-		{#if emlData.subject}
-			<div>
-				<b>Subject:</b>
-				{emlData.subject}
-			</div>
-
-			<hr />
-		{/if}
-
-		<!-- Body block -->
-		{#if emlData.html || emlData.text}
-			<div>
-				<iframe srcdoc={emlData.html || `<pre>${emlData.text}</pre>`} class="w-full h-64"></iframe>
-			</div>
-		{/if}
-
-		<!-- Body block -->
-		{#if emlData.attachments}
-			<!-- Block for file headers -->
-			<div>
-				<ul class="space-y-2 list-disc list-inside">
-					{#each emlData.attachments as attachment}
-						<li class="text-sm">
-							{attachment.name} ({attachment.contentType}) {attachment.inline ? '(inline)' : ''}
-						</li>
-					{/each}
-				</ul>
-			</div>
-		{/if}
 	{/if}
 </div>
 
