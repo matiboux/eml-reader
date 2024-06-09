@@ -1,4 +1,7 @@
 <script lang="ts">
+import { unquoteString } from 'eml-parse-js'
+import bytes from 'bytes'
+
 import emlData from '~/stores/emlData'
 
 // Props
@@ -76,8 +79,6 @@ function handleMenuSelected(value: MenuOption)
 			<div class={`paper paper-front paper-${menuSelected}`}>
 				{#if menuSelected === 'headers'}
 					{#if $emlData.headers}
-						<hr />
-
 						<ul class="list-styled">
 							{#each Object.entries($emlData.headers) as [key, value]}
 								<li>
@@ -115,7 +116,7 @@ function handleMenuSelected(value: MenuOption)
 										{/if}
 									</div>
 									<div class="right">
-										<div><b>{attachment.name}</b></div>
+										<div><b>{unquoteString(attachment.name)}</b> ({bytes.format(attachment.data.length)})</div>
 										<div> ({attachment.contentType})</div>
 									</div>
 								</button>
