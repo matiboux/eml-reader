@@ -2,6 +2,7 @@
 import { site } from '~/config'
 import Layout from '~/layouts/Layout.astro'
 import LocaleSwitch from '~/components/LocaleSwitch.astro'
+import AppForm from '~/components/AppForm.svelte'
 import Footer from '~/components/Footer.astro'
 
 import { i18nFactory } from '~/i18n'
@@ -25,6 +26,8 @@ const _ = i18nFactory(Astro.currentLocale as any)
 					{_(site.description)}
 				</p>
 			}
+
+			<AppForm class="home text-black group-hover:text-gray mt-4" locale={Astro.currentLocale} client:load />
 		</div>
 
 		<Footer class="w-full" />
