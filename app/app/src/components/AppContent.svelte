@@ -2,6 +2,7 @@
 import { unquoteString } from 'eml-parse-js'
 import bytes from 'bytes'
 
+import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
 
 // Props
@@ -18,7 +19,7 @@ type MenuOption = 'headers' | 'body' | 'attachments'
 
 let menuSelected: MenuOption = 'body'
 
-function handleMenuSelected(value: MenuOption)
+function handleMenuSelect(value: MenuOption)
 {
 	return (event: MouseEvent) =>
 	{
@@ -34,6 +35,14 @@ function handleMenuSelected(value: MenuOption)
 				behavior: 'smooth',
 			})
 		}
+	}
+}
+
+function handleAttachmentSelect(value: number)
+{
+	return () =>
+	{
+		openedAttachmentIndex.set(value)
 	}
 }
 
@@ -85,20 +94,20 @@ function getDataHtml(emlData: Record<string, any>): string
 		<nav class="menu">
 			<a
 				class={menuSelected === 'headers' ? 'active' : ''}
-				on:click={handleMenuSelected('headers')}
+				on:click={handleMenuSelect('headers')}
 			>
 				Headers
 			</a>
 			<a
 				class={menuSelected === 'body' ? 'active' : ''}
-				on:click={handleMenuSelected('body')}
+				on:click={handleMenuSelect('body')}
 			>
 				Body
 			</a>
 			{#if $emlData.attachments}
 				<a
 					class={menuSelected === 'attachments' ? 'active' : ''}
-					on:click={handleMenuSelected('attachments')}
+					on:click={handleMenuSelect('attachments')}
 				>
 					Attachments
 					<span class="badge">{$emlData.attachments.length}</span>
@@ -135,11 +144,12 @@ function getDataHtml(emlData: Record<string, any>): string
 
 					<!-- Attachments block -->
 					<ul>
-						{#each $emlData.attachments as attachment}
+						{#each $emlData.attachments as attachment, index}
 							<li>
 								<!-- <b>{attachment.name}</b> ({attachment.contentType}) -->
 								<button
 									class="attachment-btn"
+									on:click={handleAttachmentSelect(index)}
 								>
 									<div class="left">
 										{#if attachment.contentType.startsWith('image/')}
