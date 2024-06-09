@@ -110,6 +110,11 @@ function getDataHtml(emlData: Record<string, any>): string
 			<div class="paper paper-back">
 			</div>
 
+			{#if $emlData.attachments}
+				<div class="paper paper-back paper-back-alt">
+				</div>
+			{/if}
+
 			<div class={`paper paper-front paper-${menuSelected}`}>
 				{#if menuSelected === 'headers'}
 					{#if $emlData.headers}
@@ -344,6 +349,12 @@ function getDataHtml(emlData: Record<string, any>): string
 			margin-top: calc(-2% / 1.294);
 			margin-left: -2%;
 			z-index: -1;
+
+			&.paper-back-alt {
+				transform: rotate(4deg);
+				margin-top: calc(-2% / 1.294);
+				margin-left: 2%;
+			}
 		}
 
 		.paper-front {
