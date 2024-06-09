@@ -64,6 +64,7 @@ function handleMenuSelected(value: MenuOption)
 					on:click={handleMenuSelected('attachments')}
 				>
 					Attachments
+					<span class="badge">{$emlData.attachments.length}</span>
 				</a>
 			{/if}
 		</nav>
@@ -74,28 +75,6 @@ function handleMenuSelected(value: MenuOption)
 
 			<div class={`paper paper-front paper-${menuSelected}`}>
 				{#if menuSelected === 'headers'}
-					<div>
-						<a
-							on:click={handleMenuSelected('body')}
-						>
-							See message body
-							<span class="icon icon-[mdi--chevron-right]"></span>
-						</a>
-					</div>
-
-					{#if $emlData.attachments}
-						<hr />
-
-						<div>
-							<a
-								on:click={handleMenuSelected('attachments')}
-							>
-								See {$emlData.attachments.length} message attachment{#if $emlData.attachments.length > 1}s{/if}
-								<span class="icon icon-[mdi--chevron-right]"></span>
-							</a>
-						</div>
-					{/if}
-
 					{#if $emlData.headers}
 						<hr />
 
@@ -229,6 +208,21 @@ function handleMenuSelected(value: MenuOption)
 					text-gray-800
 					;
 			}
+		}
+
+		.badge {
+			@apply
+				inline-block
+				bg-gray-400
+				min-w-[1.5rem]
+				px-1
+				py-0.5
+				text-sm
+				text-center
+				text-gray-800
+				rounded-full
+				align-middle
+				;
 		}
 	}
 
