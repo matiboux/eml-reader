@@ -37,6 +37,8 @@ async function onChange(event: Event)
 			content,
 			(error, data) =>
 			{
+				target.value = ''
+
 				if (error)
 				{
 					emlError = error
