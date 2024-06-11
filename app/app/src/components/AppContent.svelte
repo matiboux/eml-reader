@@ -173,44 +173,46 @@ function getDataHtml(emlData: Record<string, any>): string
 					</ul>
 
 				{:else}
-					<!-- From block -->
-					{#if $emlData.from}
-						<div>
-							<b>From:</b>
-							{$emlData.from.name ? `${$emlData.from.name} <${$emlData.from.email}>` : $emlData.from.email}
-						</div>
-					{/if}
+					<div class="email-header">
+						<!-- From block -->
+						{#if $emlData.from}
+							<div>
+								<b>From:</b>
+								{$emlData.from.name ? `${$emlData.from.name} <${$emlData.from.email}>` : $emlData.from.email}
+							</div>
+						{/if}
 
-					<!-- To block -->
-					{#if $emlData.to}
-						<div>
-							<b>To:</b>
-							{(Array.isArray($emlData.to)
-								? $emlData.to
-								: [$emlData.to]
-							).map(to => to.name ? `${to.name} <${to.email}>` : to.email).join(', ')}
-						</div>
-					{/if}
+						<!-- To block -->
+						{#if $emlData.to}
+							<div>
+								<b>To:</b>
+								{(Array.isArray($emlData.to)
+									? $emlData.to
+									: [$emlData.to]
+								).map(to => to.name ? `${to.name} <${to.email}>` : to.email).join(', ')}
+							</div>
+						{/if}
 
-					<!-- Subject block -->
-					{#if $emlData.subject}
-						<div>
-							<b>Subject:</b>
-							{$emlData.subject}
-						</div>
-					{/if}
+						<!-- Subject block -->
+						{#if $emlData.subject}
+							<div>
+								<b>Subject:</b>
+								{$emlData.subject}
+							</div>
+						{/if}
 
-					<!-- Date block -->
-					{#if $emlData.date}
-						<div>
-							<b>Date:</b>
-							{$emlData.date.toLocaleString(locale)}
-						</div>
-					{/if}
+						<!-- Date block -->
+						{#if $emlData.date}
+							<div>
+								<b>Date:</b>
+								{$emlData.date.toLocaleString(locale)}
+							</div>
+						{/if}
+					</div>
 
 					<!-- Body block -->
 					{#if $emlData.html || $emlData.text}
-						<div class="grow">
+						<div class="email-frame">
 							<iframe
 								class="w-full h-full"
 								srcdoc={getDataHtml($emlData)}
@@ -325,9 +327,9 @@ function getDataHtml(emlData: Record<string, any>): string
 			bg-white
 			flex
 			flex-col
+			gap-4
 			w-full
 			mx-auto
-			space-y-4
 			p-6
 			overflow-y-auto
 			rounded-lg
@@ -376,6 +378,60 @@ function getDataHtml(emlData: Record<string, any>): string
 				list-disc
 				list-inside
 				;
+		}
+	}
+
+	.paper-body {
+		@apply
+			p-0
+			;
+
+		.email-header {
+			@apply
+				relative
+				flex
+				flex-col
+				items-start
+				gap-2
+				px-6
+				pt-4
+				;
+
+
+			> div {
+				@apply
+					flex
+					items-start
+					gap-2
+					;
+
+				+ div::before {
+					@apply
+						content-['']
+						absolute
+						w-[calc(100%_-_2rem)]
+						-mt-1
+						-ml-2
+						border-t
+						border-gray-200
+						;
+				}
+			}
+		}
+
+		.email-frame {
+			@apply
+				grow
+				border-t
+				border-gray-200
+				;
+
+			iframe {
+				@apply
+					w-full
+					h-full
+					;
+			}
 		}
 	}
 
