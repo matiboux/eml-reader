@@ -208,6 +208,22 @@ function getDataHtml(emlData: Record<string, any>): string
 								{$emlData.date.toLocaleString(locale)}
 							</div>
 						{/if}
+
+						{#if $emlData.attachments}
+							<div>
+								<p>
+									<span class="icon icon-[mdi--paperclip] align-icon-inline"></span>
+									{$emlData.attachments.length} attachment{#if $emlData.attachments.length > 1}s{/if}
+									–
+									<button
+										class="text-blue-600 underline"
+										on:click={handleMenuSelect('attachments')}
+									>
+										See attachments
+									</button>
+								</p>
+							</div>
+						{/if}
 					</div>
 
 					<!-- Body block -->
@@ -396,7 +412,6 @@ function getDataHtml(emlData: Record<string, any>): string
 				px-6
 				pt-4
 				;
-
 
 			> div {
 				@apply
