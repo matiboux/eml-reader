@@ -250,7 +250,7 @@ function getDataHtml(emlData: Record<string, any>): string
 		flex-col
 		justify-center
 		gap-4
-		max-w-[calc(min(100%,_75vh_/_1.294))]
+		max-w-[calc(min(750px,_100%,_75vh_/_1.294))]
 		;
 
 	.menu {
