@@ -249,7 +249,7 @@ function getDataHtml(emlData: Record<string, any>): string
 		flex
 		flex-col
 		justify-center
-		gap-[calc(max(2.5rem,_5vh_/_1.294))]
+		gap-4
 		max-w-[calc(min(100%,_75vh_/_1.294))]
 		;
 
@@ -364,7 +364,7 @@ function getDataHtml(emlData: Record<string, any>): string
 	.paper-main {
 		@apply
 			relative
-			min-h-[75vh]
+			my-[calc(max(1rem,_2.5vh))]
 			;
 
 		.paper-back {
@@ -410,7 +410,7 @@ function getDataHtml(emlData: Record<string, any>): string
 				items-start
 				gap-2
 				px-6
-				pt-4
+				pt-6
 				;
 
 			> div {
