@@ -13,6 +13,19 @@ export {
 	style,
 	locale,
 }
+
+function closeModal()
+{
+	openedAttachmentIndex.set(null)
+}
+
+function onWrapperClick(event: MouseEvent)
+{
+	if (event.target === event.currentTarget)
+	{
+		closeModal()
+	}
+}
 </script>
 
 <div
@@ -22,6 +35,7 @@ export {
 		...($openedAttachmentIndex !== null ? ['opened'] : []),
 	])).join(' ')}
 	style={style}
+	on:click|preventDefault={onWrapperClick}
 >
 
 	<div class="modal-wrapper">
@@ -71,9 +85,8 @@ export {
 			items-center
 			gap-8
 			w-full
-			max-w-[calc(1000px+2*2rem)]
+			max-w-[calc(1000px)]
 			mx-auto
-			p-8
 			;
 
 		.modal {
