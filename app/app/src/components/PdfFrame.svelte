@@ -239,7 +239,7 @@ async function closePdfFrame()
 		</div>
 		<div class="pdf-nav-section">
 			<div class="pdf-nav-section">
-				<p>
+				<p class="min-width-2">
 					<span class="sr-only">Page</span>
 					{currPage} / {pdfDocument?.numPages ?? '...'}
 				</p>
@@ -259,7 +259,7 @@ async function closePdfFrame()
 				</div>
 			</div>
 			<div class="pdf-nav-section">
-				<p>
+				<p class="min-width-1">
 					<span class="sr-only">Zoom</span>
 					{scale ? `${Math.round(scale * 100)}%` : '...'}
 				</p>
@@ -360,12 +360,18 @@ async function closePdfFrame()
 
 		.pdf-nav-section {
 			@apply
-				col-span-2
+				col-span-3
 				flex
 				items-center
 				justify-center
 				gap-2
 				;
+
+			&.sm-small {
+				@apply
+					col-span-2
+					;
+			}
 
 			&:has(.pdf-nav-section) {
 				@apply
@@ -387,10 +393,21 @@ async function closePdfFrame()
 
 			> p {
 				@apply
-					min-w-20
 					text-center
 					whitespace-nowrap
 					;
+
+				&.min-width-1 {
+					@apply
+						min-w-10
+						;
+				}
+
+				&.min-width-2 {
+					@apply
+						min-w-20
+						;
+				}
 			}
 		}
 
@@ -438,7 +455,7 @@ async function closePdfFrame()
 		}
 	}
 
-	@media (max-width: 799.98px)
+	@media (max-width: 899.98px)
 	{
 		> .pdf-nav {
 			@apply
@@ -468,9 +485,17 @@ async function closePdfFrame()
 				}
 
 				> p {
-					@apply
-						min-w-16
-						;
+					&.min-width-1 {
+						@apply
+							min-w-8
+							;
+					}
+
+					&.min-width-2 {
+						@apply
+							min-w-16
+							;
+					}
 				}
 			}
 
@@ -483,7 +508,7 @@ async function closePdfFrame()
 		}
 	}
 
-	@media (max-width: 549.98px)
+	@media (max-width: 599.98px)
 	{
 		> .pdf-nav {
 			.pdf-nav-section.sm-small {
