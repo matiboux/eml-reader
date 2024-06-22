@@ -25,6 +25,25 @@ function onWrapperClick(event: MouseEvent)
 		closeModal()
 	}
 }
+
+function getAttachmentFileName(attachment: any): string | null
+{
+	if (attachment?.contentType)
+	{
+		// Get the name from the content type
+		const match = /(?:N|n)ame=(?:'|")?(.+?)(?:'|")?(\s*;[\s\S]*)?$/g.exec(attachment.contentType)
+		return match ? match[1] : attachment.name
+	}
+
+	if (attachment?.name)
+	{
+		// Get the name from the name
+		const match = /([^/\\]+)$/.exec(attachment.name)
+		return match ? match[1] : attachment.name
+	}
+
+	return null
+}
 </script>
 
 <div
@@ -51,6 +70,7 @@ function onWrapperClick(event: MouseEvent)
 		{#if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^application\/pdf(?:$|;)/)}
 			<div class="modal no-padding">
 				<PdfFrame
+					filename={getAttachmentFileName($emlData?.attachments?.[$openedAttachmentIndex]) ?? 'document.pdf'}
 					data64={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
 				/>
 			</div>

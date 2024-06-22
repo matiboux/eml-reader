@@ -5,10 +5,12 @@ import bytes from 'bytes'
 // Props
 let userClass: string | undefined = undefined
 let style: string | undefined = undefined
+let filename: string | undefined = undefined
 let data64: string | undefined = undefined
 export {
 	userClass as class,
 	style,
+	filename,
 	data64,
 }
 
@@ -169,9 +171,8 @@ async function onPdfContentKeyUp(event: KeyboardEvent)
 >
 
 	<div class="pdf-nav">
-		<div class="pdf-nav-section">
-		</div>
-		<div class="pdf-nav-section">
+		<div class="pdf-nav-section col-span-2">
+			<p>{filename}</p>
 		</div>
 		<div class="pdf-nav-section">
 			<p>
