@@ -95,7 +95,7 @@ let resizeHandleMutex: boolean = false
 
 function onPdfContentResize(_: ResizeObserverEntry[], __: ResizeObserver)
 {
-	if (resizeHandleMutex)
+	if (resizeHandleMutex || !scaleFit)
 	{
 		return
 	}
@@ -107,7 +107,7 @@ function onPdfContentResize(_: ResizeObserverEntry[], __: ResizeObserver)
 
 	resizeHandlerTimeout = setTimeout(() =>
 		{
-			if (!pdfDocument)
+			if (!pdfDocument || !scaleFit)
 			{
 				return
 			}
