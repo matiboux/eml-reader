@@ -2,6 +2,7 @@
 import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
 import PdfFrame from '~/components/PdfFrame.svelte'
+import ImageFrame from '~/components/ImageFrame.svelte'
 
 // Props
 let userClass: string | undefined = undefined
@@ -24,6 +25,31 @@ function onWrapperClick(event: MouseEvent)
 	{
 		closeModal()
 	}
+}
+
+function getAttachmentContentType(attachment: any): string | null
+{
+	if (attachment?.contentType)
+	{
+		// Get the content type without named arguments
+		const match = /^([^;]+)/.exec(attachment.contentType)
+		if (match && match[1])
+		{
+			return match[1]
+		}
+	}
+
+	if (attachment?.name)
+	{
+		// Get the type from the name
+		const match = /([^.]+)$/.exec(attachment.name)
+		if (match && match[1])
+		{
+			return `image/${match[1]}`
+		}
+	}
+
+	return null
 }
 
 function getAttachmentFileName(attachment: any): string | null
@@ -76,10 +102,12 @@ function getAttachmentFileName(attachment: any): string | null
 				/>
 			</div>
 		{:else if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^image\/(?:png|jpeg|gif)(?:$|;)/)}
-			<div class="modal">
-				<img
-					src={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
-					alt={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
+			<div class="modal no-padding">
+				<ImageFrame
+					filename={getAttachmentFileName($emlData?.attachments?.[$openedAttachmentIndex]) ?? 'document.pdf'}
+					contentType={getAttachmentContentType($emlData?.attachments?.[$openedAttachmentIndex])}
+					data64={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
+					on:close={closeModal}
 				/>
 			</div>
 		{:else}
