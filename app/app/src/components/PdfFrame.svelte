@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMount } from 'svelte'
+import { onMount, onDestroy } from 'svelte'
 import bytes from 'bytes'
 
 // Props
@@ -95,6 +95,11 @@ onMount(async () =>
 		}
 
 		loadPdf(atob(data64))
+	})
+
+onDestroy(async () =>
+	{
+		pdfDocument = null
 	})
 </script>
 
