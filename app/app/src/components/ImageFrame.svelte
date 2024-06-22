@@ -2,19 +2,26 @@
 import { createEventDispatcher } from 'svelte'
 import bytes from 'bytes'
 
+import type { Locales } from '~/i18n/type.d.ts'
+import { i18nFactory } from '~/i18n'
+
 // Props
 let userClass: string | undefined = undefined
 let style: string | undefined = undefined
+let locale: Locales | undefined = undefined
 let filename: string | undefined = undefined
 let contentType: string | undefined = undefined
 let data64: string | undefined = undefined
 export {
 	userClass as class,
 	style,
+	locale,
 	filename,
 	contentType,
 	data64,
 }
+
+const _ = i18nFactory(locale)
 
 let contentWrapper: HTMLDivElement
 
@@ -80,7 +87,12 @@ async function closePdfFrame()
 			<button
 				on:click|preventDefault={downloadImage}
 			>
-				<span class="sr-only">Download</span>
+				<span class="sr-only">
+					{_({
+						en: 'Download',
+						fr: 'Télécharger',
+					})}
+				</span>
 				<span class="icon icon-[mdi--download]"></span>
 			</button>
 			<button

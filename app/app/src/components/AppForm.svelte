@@ -1,21 +1,22 @@
 <script lang="ts">
 import { readEml } from 'eml-parse-js'
 
+import type { Locales } from '~/i18n/type.d.ts'
+import { i18nFactory } from '~/i18n'
 import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
 
 // Props
 let userClass: string | undefined = undefined
 let style: string | undefined = undefined
-let locale: string | undefined = undefined
+let locale: Locales | undefined = undefined
 export {
 	userClass as class,
 	style,
 	locale,
 }
 
-import { i18nFactory } from '~/i18n'
-const _ = i18nFactory(locale as any)
+const _ = i18nFactory(locale)
 
 let emlError: any = null
 
@@ -103,9 +104,13 @@ async function onChange(event: Event)
 	{#if emlError}
 		<hr />
 
-		<!-- From block -->
 		<div>
-			<b>Error:</b>
+			<b>
+				{_({
+					en: 'Error:',
+					fr: 'Erreur :',
+				})}
+			</b>
 			{emlError}
 		</div>
 	{/if}

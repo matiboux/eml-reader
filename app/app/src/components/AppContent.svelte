@@ -2,18 +2,22 @@
 import { unquoteString } from 'eml-parse-js'
 import bytes from 'bytes'
 
+import type { Locales } from '~/i18n/type.d.ts'
+import { i18nFactory } from '~/i18n'
 import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
 
 // Props
 let userClass: string | undefined = undefined
 let style: string | undefined = undefined
-let locale: string | undefined = undefined
+let locale: Locales | undefined = undefined
 export {
 	userClass as class,
 	style,
 	locale,
 }
+
+const _ = i18nFactory(locale)
 
 type MenuOption = 'headers' | 'body' | 'attachments'
 
@@ -96,20 +100,29 @@ function getDataHtml(emlData: Record<string, any>): string
 				class={menuSelected === 'headers' ? 'active' : ''}
 				on:click={handleMenuSelect('headers')}
 			>
-				Headers
+				{_({
+					en: 'Headers',
+					fr: 'En-têtes',
+				})}
 			</a>
 			<a
 				class={menuSelected === 'body' ? 'active' : ''}
 				on:click={handleMenuSelect('body')}
 			>
-				Body
+				{_({
+					en: 'Body',
+					fr: 'Corps',
+				})}
 			</a>
 			{#if $emlData.attachments}
 				<a
 					class={menuSelected === 'attachments' ? 'active' : ''}
 					on:click={handleMenuSelect('attachments')}
 				>
-					Attachments
+					{_({
+						en: 'Attachments',
+						fr: 'Pièces jointes',
+					})}
 					<span class="badge">{$emlData.attachments.length}</span>
 				</a>
 			{/if}
@@ -139,7 +152,12 @@ function getDataHtml(emlData: Record<string, any>): string
 				{:else if menuSelected === 'attachments' && $emlData.attachments}
 					<div class="message message-warning">
 						<span class="icon icon-[mdi--warning]"></span>
-						<span>Careful! Make sure you trust the source before opening or downloading attachments.</span>
+						<span>
+							{_({
+								en: 'Careful! Make sure you trust the source before opening or downloading attachments.',
+								fr: 'Attention ! Assurez-vous de faire confiance en la source avant d\'ouvrir ou de télécharger les pièces jointes.',
+							})}
+						</span>
 					</div>
 
 					<!-- Attachments block -->
@@ -177,7 +195,12 @@ function getDataHtml(emlData: Record<string, any>): string
 						<!-- From block -->
 						{#if $emlData.from}
 							<div>
-								<b>From:</b>
+								<b>
+									{_({
+										en: 'From:',
+										fr: 'De :',
+									})}
+								</b>
 								{$emlData.from.name ? `${$emlData.from.name} <${$emlData.from.email}>` : $emlData.from.email}
 							</div>
 						{/if}
@@ -185,7 +208,12 @@ function getDataHtml(emlData: Record<string, any>): string
 						<!-- To block -->
 						{#if $emlData.to}
 							<div>
-								<b>To:</b>
+								<b>
+									{_({
+										en: 'To:',
+										fr: 'À :',
+									})}
+								</b>
 								{(Array.isArray($emlData.to)
 									? $emlData.to
 									: [$emlData.to]
@@ -196,7 +224,12 @@ function getDataHtml(emlData: Record<string, any>): string
 						<!-- Subject block -->
 						{#if $emlData.subject}
 							<div>
-								<b>Subject:</b>
+								<b>
+									{_({
+										en: 'Subject:',
+										fr: 'Sujet :',
+									})}
+								</b>
 								{$emlData.subject}
 							</div>
 						{/if}
@@ -204,7 +237,12 @@ function getDataHtml(emlData: Record<string, any>): string
 						<!-- Date block -->
 						{#if $emlData.date}
 							<div>
-								<b>Date:</b>
+								<b>
+									{_({
+										en: 'Date:',
+										fr: 'Date :',
+									})}
+								</b>
 								{$emlData.date.toLocaleString(locale)}
 							</div>
 						{/if}
@@ -213,13 +251,20 @@ function getDataHtml(emlData: Record<string, any>): string
 							<div>
 								<p>
 									<span class="icon icon-[mdi--paperclip] align-icon-inline"></span>
-									{$emlData.attachments.length} attachment{#if $emlData.attachments.length > 1}s{/if}
+									{$emlData.attachments.length}
+									{_({
+										en: $emlData.attachments.length > 1 ? 'attachments' : 'attachment',
+										fr: $emlData.attachments.length > 1 ? 'pièces jointes' : 'pièce jointe',
+									})}
 									–
 									<button
 										class="text-blue-600 underline"
 										on:click={handleMenuSelect('attachments')}
 									>
-										See attachments
+										{_({
+											en: 'See attachments',
+											fr: 'Voir les pièces jointes',
+										})}
 									</button>
 								</p>
 							</div>

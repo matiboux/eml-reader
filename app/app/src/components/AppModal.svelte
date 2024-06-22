@@ -1,6 +1,7 @@
 <script lang="ts">
 import { unquoteString } from 'eml-parse-js'
 
+import type { Locales } from '~/i18n/type.d.ts'
 import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
 import PdfFrame from '~/components/PdfFrame.svelte'
@@ -10,7 +11,7 @@ import DownloadFrame from '~/components/DownloadFrame.svelte'
 // Props
 let userClass: string | undefined = undefined
 let style: string | undefined = undefined
-let locale: string | undefined = undefined
+let locale: Locales | undefined = undefined
 export {
 	userClass as class,
 	style,
@@ -105,6 +106,7 @@ function getAttachmentContentType(attachment: any): string | null
 		{#if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^application\/pdf(?:$|;)/)}
 			<div class="modal modal-fullscreen no-padding">
 				<PdfFrame
+					locale={locale}
 					filename={getAttachmentFileName($emlData?.attachments?.[$openedAttachmentIndex]) ?? 'document.pdf'}
 					data64={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
 					on:close={closeModal}
@@ -113,8 +115,9 @@ function getAttachmentContentType(attachment: any): string | null
 		{:else if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^image\/(?:png|jpeg|gif)(?:$|;)/)}
 			<div class="modal no-padding">
 				<ImageFrame
+					locale={locale}
 					filename={getAttachmentFileName($emlData?.attachments?.[$openedAttachmentIndex]) ?? 'document.pdf'}
-					contentType={getAttachmentContentType($emlData?.attachments?.[$openedAttachmentIndex])}
+					contentType={getAttachmentContentType($emlData?.attachments?.[$openedAttachmentIndex]) ?? undefined}
 					data64={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
 					on:close={closeModal}
 				/>
@@ -122,6 +125,7 @@ function getAttachmentContentType(attachment: any): string | null
 		{:else}
 			<div class="modal no-padding">
 				<DownloadFrame
+					locale={locale}
 					filename={getAttachmentFileName($emlData?.attachments?.[$openedAttachmentIndex]) ?? 'document.pdf'}
 					contentType={getAttachmentContentType($emlData?.attachments?.[$openedAttachmentIndex]) ?? undefined}
 					data64={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}

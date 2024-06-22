@@ -1,5 +1,6 @@
 ---
 import { site } from '~/config'
+import type { Locales } from '~/i18n/type.d.ts'
 import Layout from '~/layouts/Layout.astro'
 import AppModal from '~/components/AppModal.svelte'
 import LocaleSwitch from '~/components/LocaleSwitch.astro'
@@ -8,14 +9,14 @@ import AppContent from '~/components/AppContent.svelte'
 import Footer from '~/components/Footer.astro'
 
 import { i18nFactory } from '~/i18n'
-const _ = i18nFactory(Astro.currentLocale as any)
+const _ = i18nFactory(Astro.currentLocale as Locales | undefined)
 ---
 
 <Layout
 	bodyClass="bg-gray-100 h-screen"
 >
 
-	<AppModal locale={Astro.currentLocale} client:load />
+	<AppModal locale={Astro.currentLocale as Locales | undefined} client:load />
 
 	<div class="flex flex-col justify-center items-center min-h-full overflow-y gap-8 p-8 w-full max-w-[calc(1000px+2*2rem)] mx-auto">
 		<div class="bg-white shadow-lg rounded-lg p-6 w-full space-y-4">
@@ -32,10 +33,10 @@ const _ = i18nFactory(Astro.currentLocale as any)
 				</p>
 			}
 
-			<AppForm class="home text-black group-hover:text-gray mt-4" locale={Astro.currentLocale} client:load />
+			<AppForm class="home text-black group-hover:text-gray mt-4" locale={Astro.currentLocale as Locales | undefined} client:load />
 		</div>
 
-		<AppContent locale={Astro.currentLocale} client:load />
+		<AppContent locale={Astro.currentLocale as Locales | undefined} client:load />
 
 		<Footer class="w-full" />
 	</div>

@@ -2,17 +2,24 @@
 import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 import bytes from 'bytes'
 
+import type { Locales } from '~/i18n/type.d.ts'
+import { i18nFactory } from '~/i18n'
+
 // Props
 let userClass: string | undefined = undefined
 let style: string | undefined = undefined
+let locale: Locales | undefined = undefined
 let filename: string | undefined = undefined
 let data64: string | undefined = undefined
 export {
 	userClass as class,
 	style,
+	locale,
 	filename,
 	data64,
 }
+
+const _ = i18nFactory(locale)
 
 let scale: number | null = null
 let scaleFit: boolean = true
