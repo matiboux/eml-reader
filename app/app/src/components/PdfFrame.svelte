@@ -441,7 +441,7 @@ async function closePdfFrame()
 					;
 			}
 
-			&:active, &.active {
+			&:not(:disabled):active, &.active {
 				@apply
 					bg-gray-800
 					;
