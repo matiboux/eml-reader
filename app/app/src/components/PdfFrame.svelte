@@ -156,6 +156,20 @@ async function onPdfContentKeyUp(event: KeyboardEvent)
 		}
 	}
 }
+
+async function downloadPdf()
+{
+	if (!data64)
+	{
+		return
+	}
+
+	const a = document.createElement('a')
+	a.href = `data:application/pdf;base64,${data64}`
+	a.download = filename ?? 'document.pdf'
+	a.click()
+	a.remove()
+}
 </script>
 
 <svelte:document
@@ -215,7 +229,9 @@ async function onPdfContentKeyUp(event: KeyboardEvent)
 				<span class="icon icon-[mdi--database] align-icon-inline"></span>
 				{data64 && bytes(data64.length)}
 			</p>
-			<button disabled>
+			<button
+				on:click|preventDefault={downloadPdf}
+			>
 				<span class="sr-only">Download</span>
 				<span class="icon icon-[mdi--download]"></span>
 			</button>
