@@ -1,8 +1,7 @@
 <script lang="ts">
-import bytes from 'bytes'
-
 import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
+import PdfFrame from '~/components/PdfFrame.svelte'
 
 // Props
 let userClass: string | undefined = undefined
@@ -38,18 +37,47 @@ function onWrapperClick(event: MouseEvent)
 	on:click|preventDefault={onWrapperClick}
 >
 
-	<div class="modal-wrapper">
+	<!-- <div class="modal-wrapper">
 		<div class="modal">
 			{$openedAttachmentIndex}
 			{#if $openedAttachmentIndex !== null}
 				<br />
 				{$emlData?.attachments?.[$openedAttachmentIndex]?.name} <br />
 				{$emlData?.attachments?.[$openedAttachmentIndex]?.contentType} <br />
-				<!-- {$emlData?.attachments?.[$openedAttachmentIndex]?.data64} <br /> -->
 				{$emlData?.attachments?.[$openedAttachmentIndex]?.data64 && bytes($emlData.attachments?.[$openedAttachmentIndex]?.data64.length)}
 			{/if}
 		</div>
-	</div>
+	</div> -->
+
+	{#if $openedAttachmentIndex !== null}
+		{#if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^application\/pdf(?:$|;)/)}
+			<div class="modal no-padding">
+				<PdfFrame
+					data64={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
+				/>
+			</div>
+		{:else if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^image\/(?:png|jpeg|gif)(?:$|;)/)}
+			<div class="modal-wrapper grow">
+				<div class="modal">
+					<img
+						src={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
+						alt={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
+					/>
+				</div>
+			</div>
+		{:else}
+			<div class="modal-wrapper grow">
+				<div class="modal">
+					<a
+						href={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
+						download={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
+					>
+						Download
+					</a>
+				</div>
+			</div>
+		{/if}
+	{/if}
 
 </div>
 
@@ -64,9 +92,10 @@ function onWrapperClick(event: MouseEvent)
 		flex-col
 		justify-center
 		items-center
-		gap-8
+		gap-4
 		w-full
 		h-full
+		p-4
 		overflow-y-hidden
 		z-[1000]
 		;
@@ -83,20 +112,32 @@ function onWrapperClick(event: MouseEvent)
 			flex-col
 			justify-center
 			items-center
-			gap-8
 			w-full
-			max-w-[calc(1000px)]
+			max-w-[calc(1000px_+_2rem)]
+			max-h-full
 			mx-auto
 			;
+	}
 
-		.modal {
+	.modal {
+		@apply
+			bg-gray-600
+			w-full
+			h-full
+			max-w-[calc(1000px_+_2rem)]
+			mx-auto
+			p-6
+			space-y-4
+			overflow-y-auto
+			rounded-lg
+			shadow-lg
+			border
+			border-[#00000011]
+			;
+
+		&.no-padding {
 			@apply
-				bg-white
-				shadow-lg
-				rounded-lg
-				w-full
-				p-6
-				space-y-4
+				p-0
 				;
 		}
 	}
