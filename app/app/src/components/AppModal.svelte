@@ -27,6 +27,31 @@ function onWrapperClick(event: MouseEvent)
 	}
 }
 
+function getAttachmentFileName(attachment: any): string | null
+{
+	if (attachment?.contentType)
+	{
+		// Get the name from the content type
+		const match = /(?:N|n)ame=(?:'|")?(.+?)(?:'|")?(\s*;[\s\S]*)?$/g.exec(attachment.contentType)
+		if (match && match[1])
+		{
+			return match[1]
+		}
+	}
+
+	if (attachment?.name)
+	{
+		// Get the name from the name
+		const match = /([^/\\]+)$/.exec(attachment.name)
+		if (match && match[1])
+		{
+			return match[1]
+		}
+	}
+
+	return attachment?.name ?? null
+}
+
 function getAttachmentContentType(attachment: any): string | null
 {
 	if (attachment?.contentType)
@@ -47,25 +72,6 @@ function getAttachmentContentType(attachment: any): string | null
 		{
 			return `image/${match[1]}`
 		}
-	}
-
-	return null
-}
-
-function getAttachmentFileName(attachment: any): string | null
-{
-	if (attachment?.contentType)
-	{
-		// Get the name from the content type
-		const match = /(?:N|n)ame=(?:'|")?(.+?)(?:'|")?(\s*;[\s\S]*)?$/g.exec(attachment.contentType)
-		return match ? match[1] : attachment.name
-	}
-
-	if (attachment?.name)
-	{
-		// Get the name from the name
-		const match = /([^/\\]+)$/.exec(attachment.name)
-		return match ? match[1] : attachment.name
 	}
 
 	return null
