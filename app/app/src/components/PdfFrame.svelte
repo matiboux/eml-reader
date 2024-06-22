@@ -175,14 +175,19 @@ async function onPdfContentKeyUp(event: KeyboardEvent)
 		</div>
 		<div class="pdf-nav-section">
 			<p>
+				<span class="sr-only">Page</span>
 				{currPage} / {pdfDocument?.numPages ?? '...'}
 			</p>
 			<div class="buttons-group">
-				<button disabled>
+				<button
+					on:click|preventDefault={loadPreviousPage}
+				>
 					<span class="icon icon-[mdi--chevron-left]"></span>
 					<span class="sr-only">Previous</span>
 				</button>
-				<button disabled>
+				<button
+					on:click|preventDefault={loadNextPage}
+				>
 					<span class="sr-only">Next</span>
 					<span class="icon icon-[mdi--chevron-right]"></span>
 				</button>
