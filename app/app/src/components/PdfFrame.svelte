@@ -112,7 +112,44 @@ function onPdfContentMouseWheel(event: WheelEvent)
 	// event.preventDefault()
 	console.log('mousewheel', event)
 }
+
+function onPdfContentKeyUp(event: KeyboardEvent)
+{
+	if (!pdfDocument)
+	{
+		return
+	}
+
+	switch(event.key)
+	{
+		case 'ArrowUp':
+		case 'ArrowLeft':
+		{
+			// Previous page
+			currPage = Math.max(currPage - 1, 1)
+			break
+		}
+		case 'ArrowDown':
+		case 'ArrowRight':
+		{
+			// Next page
+			currPage = Math.min(currPage + 1, pdfDocument.numPages)
+			break
+		}
+		default:
+		{
+			return
+		}
+	}
+
+	event.preventDefault()
+	pdfDocument.getPage(currPage).then(handlePage)
+}
 </script>
+
+<svelte:document
+	on:keyup={onPdfContentKeyUp}
+/>
 
 <div
 	class={Array.from(new Set([
