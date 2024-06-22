@@ -15,6 +15,8 @@ export {
 }
 
 let scale: number | null = null
+let scaleFit: boolean = true
+
 let currPage = 1
 let contentWrapper: HTMLDivElement
 let pdfCanvas: HTMLCanvasElement
@@ -270,6 +272,10 @@ async function closePdfFrame()
 						<span class="sr-only">Zoom In</span>
 						<span class="icon icon-[mdi--magnify-plus]"></span>
 					</button>
+					<button class={scaleFit ? 'active' : undefined} disabled>
+						<span class="sr-only">Fit screen</span>
+						<span class="icon icon-[mdi--fit-to-screen]"></span>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -418,10 +424,16 @@ async function closePdfFrame()
 					;
 			}
 
-			&:not(:disabled):active {
+			&:active, &.active {
 				@apply
 					bg-gray-800
 					;
+
+				&:disabled {
+					@apply
+						bg-gray-700
+						;
+				}
 			}
 		}
 	}
