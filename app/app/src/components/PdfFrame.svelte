@@ -101,6 +101,17 @@ onDestroy(async () =>
 	{
 		pdfDocument = null
 	})
+
+function onPdfContentMouseWheel(event: WheelEvent)
+{
+	if (!pdfDocument)
+	{
+		return
+	}
+
+	// event.preventDefault()
+	console.log('mousewheel', event)
+}
 </script>
 
 <div
@@ -168,6 +179,7 @@ onDestroy(async () =>
 	<div
 		class="pdf-content"
 		bind:this={contentWrapper}
+		on:mousewheel={onPdfContentMouseWheel}
 	>
 		<canvas
 			bind:this={pdfCanvas}
