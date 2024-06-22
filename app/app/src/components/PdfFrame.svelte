@@ -232,64 +232,68 @@ async function closePdfFrame()
 >
 
 	<div class="pdf-nav">
-		<div class="pdf-nav-section col-span-2">
+		<div class="pdf-nav-section">
 			<p>{filename}</p>
 		</div>
 		<div class="pdf-nav-section">
-			<p>
-				<span class="sr-only">Page</span>
-				{currPage} / {pdfDocument?.numPages ?? '...'}
-			</p>
-			<div class="buttons-group">
-				<button
-					on:click|preventDefault={loadPreviousPage}
-				>
-					<span class="icon icon-[mdi--chevron-left]"></span>
-					<span class="sr-only">Previous</span>
-				</button>
-				<button
-					on:click|preventDefault={loadNextPage}
-				>
-					<span class="sr-only">Next</span>
-					<span class="icon icon-[mdi--chevron-right]"></span>
-				</button>
+			<div class="pdf-nav-section">
+				<p>
+					<span class="sr-only">Page</span>
+					{currPage} / {pdfDocument?.numPages ?? '...'}
+				</p>
+				<div class="buttons-group">
+					<button
+						on:click|preventDefault={loadPreviousPage}
+					>
+						<span class="icon icon-[mdi--chevron-left]"></span>
+						<span class="sr-only">Previous</span>
+					</button>
+					<button
+						on:click|preventDefault={loadNextPage}
+					>
+						<span class="sr-only">Next</span>
+						<span class="icon icon-[mdi--chevron-right]"></span>
+					</button>
+				</div>
+			</div>
+			<div class="pdf-nav-section">
+				<p>
+					<span class="sr-only">Zoom</span>
+					100%
+				</p>
+				<div class="buttons-group">
+					<button disabled>
+						<span class="sr-only">Zoom Out</span>
+						<span class="icon icon-[mdi--magnify-minus]"></span>
+					</button>
+					<button disabled>
+						<span class="sr-only">Zoom In</span>
+						<span class="icon icon-[mdi--magnify-plus]"></span>
+					</button>
+				</div>
 			</div>
 		</div>
-		<div class="pdf-nav-section">
-			<p>
-				<span class="sr-only">Zoom</span>
-				100%
-			</p>
-			<div class="buttons-group">
-				<button disabled>
-					<span class="sr-only">Zoom Out</span>
-					<span class="icon icon-[mdi--magnify-minus]"></span>
-				</button>
-				<button disabled>
-					<span class="sr-only">Zoom In</span>
-					<span class="icon icon-[mdi--magnify-plus]"></span>
+		<div class="pdf-nav-section pdf-nav-section-end sm-small">
+			<div class="pdf-nav-section">
+				<p class="sm-hidden">
+					<span class="icon icon-[mdi--database] align-icon-inline"></span>
+					{data64 && bytes(data64.length)}
+				</p>
+				<button
+					on:click|preventDefault={downloadPdf}
+				>
+					<span class="sr-only">Download</span>
+					<span class="icon icon-[mdi--download]"></span>
 				</button>
 			</div>
-		</div>
-		<div class="pdf-nav-section">
-			<p>
-				<span class="icon icon-[mdi--database] align-icon-inline"></span>
-				{data64 && bytes(data64.length)}
-			</p>
-			<button
-				on:click|preventDefault={downloadPdf}
-			>
-				<span class="sr-only">Download</span>
-				<span class="icon icon-[mdi--download]"></span>
-			</button>
-		</div>
-		<div class="pdf-nav-section">
-			<button
-				on:click|preventDefault={closePdfFrame}
-			>
-				<span class="icon icon-[mdi--close]"></span>
-				<span class="sr-only">Close</span>
-			</button>
+			<div class="pdf-nav-section">
+				<button
+					on:click|preventDefault={closePdfFrame}
+				>
+					<span class="icon icon-[mdi--close]"></span>
+					<span class="sr-only">Close</span>
+				</button>
+			</div>
 		</div>
 	</div>
 
@@ -348,13 +352,20 @@ async function closePdfFrame()
 			text-white
 			;
 
-		> .pdf-nav-section {
+		.pdf-nav-section {
 			@apply
+				col-span-2
 				flex
 				items-center
 				justify-center
 				gap-2
 				;
+
+			&:has(.pdf-nav-section) {
+				@apply
+					gap-4
+					;
+			}
 
 			&.pdf-nav-section-start {
 				@apply
@@ -365,6 +376,14 @@ async function closePdfFrame()
 			&.pdf-nav-section-end {
 				@apply
 					justify-end
+					;
+			}
+
+			> p {
+				@apply
+					min-w-20
+					text-center
+					whitespace-nowrap
 					;
 			}
 		}
@@ -402,6 +421,68 @@ async function closePdfFrame()
 			&:not(:disabled):active {
 				@apply
 					bg-gray-800
+					;
+			}
+		}
+	}
+
+	@media (max-width: 799.98px)
+	{
+		> .pdf-nav {
+			@apply
+				h-16
+				;
+
+			> .pdf-nav-section {
+				&:has(.pdf-nav-section) {
+					@apply
+						flex-col
+						gap-0
+						;
+
+					&.pdf-nav-section-start {
+						@apply
+							items-start
+							justify-center
+							;
+					}
+
+					&.pdf-nav-section-end {
+						@apply
+							items-end
+							justify-center
+							;
+					}
+				}
+
+				> p {
+					@apply
+						min-w-16
+						;
+				}
+			}
+
+			button {
+				@apply
+					min-h-8
+					h-8
+					;
+			}
+		}
+	}
+
+	@media (max-width: 549.98px)
+	{
+		> .pdf-nav {
+			.pdf-nav-section.sm-small {
+				@apply
+					col-span-1
+					;
+			}
+
+			.sm-hidden {
+				@apply
+					hidden
 					;
 			}
 		}
