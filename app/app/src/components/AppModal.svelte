@@ -72,6 +72,7 @@ function getAttachmentFileName(attachment: any): string | null
 				<PdfFrame
 					filename={getAttachmentFileName($emlData?.attachments?.[$openedAttachmentIndex]) ?? 'document.pdf'}
 					data64={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
+					on:close={closeModal}
 				/>
 			</div>
 		{:else if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^image\/(?:png|jpeg|gif)(?:$|;)/)}

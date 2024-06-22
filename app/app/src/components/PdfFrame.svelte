@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMount, onDestroy } from 'svelte'
+import { onMount, onDestroy, createEventDispatcher } from 'svelte'
 import bytes from 'bytes'
 
 // Props
@@ -170,6 +170,13 @@ async function downloadPdf()
 	a.click()
 	a.remove()
 }
+
+const dispatch = createEventDispatcher()
+
+async function closePdfFrame()
+{
+	dispatch('close')
+}
 </script>
 
 <svelte:document
@@ -237,7 +244,9 @@ async function downloadPdf()
 			</button>
 		</div>
 		<div class="pdf-nav-section">
-			<button disabled>
+			<button
+				on:click|preventDefault={closePdfFrame}
+			>
 				<span class="icon icon-[mdi--close]"></span>
 				<span class="sr-only">Close</span>
 			</button>
