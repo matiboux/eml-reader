@@ -33,7 +33,7 @@ function getInitialScale(page: any)
 	)
 }
 
-function handlePage(page: any)
+async function handlePage(page: any)
 {
 	if (scale === null)
 	{
@@ -53,8 +53,10 @@ function handlePage(page: any)
 		viewport: viewport
 	}
 	var renderTask = page.render(renderContext)
+
 	var textPromise = page.getTextContent()
-	Promise.all([
+
+	await Promise.all([
 		renderTask.promise,
 		textPromise,
 	]).then(async ([_, textContent]) =>
@@ -83,16 +85,19 @@ async function loadPdf(data: string)
 	await PdfJS.getDocument({ data: data }).promise.then((pdf: any) =>
 		{
 			pdfDocument = pdf
-
-			// Fetch the current page
-			pdf.getPage(currPage).then(handlePage)
 		})
 }
 
 let resizeHandlerTimeout: NodeJS.Timeout | null = null
+let resizeHandleMutex: boolean = false
 
 function onPdfContentResize(_: ResizeObserverEntry[], __: ResizeObserver)
 {
+	if (resizeHandleMutex)
+	{
+		return
+	}
+
 	if (resizeHandlerTimeout !== null)
 	{
 		clearTimeout(resizeHandlerTimeout)
@@ -105,15 +110,19 @@ function onPdfContentResize(_: ResizeObserverEntry[], __: ResizeObserver)
 				return
 			}
 
+			resizeHandleMutex = true
+
 			// Fetch the current page
 			pdfDocument.getPage(currPage).then(
-				(page: any) =>
+				async (page: any) =>
 				{
 					// Reset the scale
 					scale = getInitialScale(page)
 
 					// Re-render the page
-					return handlePage(page)
+					await handlePage(page)
+
+					resizeHandleMutex = false
 				},
 			)
 		}, 50)
@@ -126,7 +135,7 @@ onMount(async () =>
 			return
 		}
 
-		loadPdf(atob(data64))
+		await loadPdf(atob(data64))
 		new ResizeObserver(onPdfContentResize).observe(contentWrapper)
 	})
 
