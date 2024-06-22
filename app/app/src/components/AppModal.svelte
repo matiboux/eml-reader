@@ -127,7 +127,7 @@ function getAttachmentFileName(attachment: any): string | null
 
 	.modal {
 		@apply
-			bg-gray-600
+			bg-white
 			w-full
 			max-w-[calc(1000px_+_2rem)]
 			mx-auto
@@ -148,6 +148,7 @@ function getAttachmentFileName(attachment: any): string | null
 
 		&.no-padding {
 			@apply
+				bg-gray-600
 				p-0
 				;
 		}
