@@ -195,61 +195,69 @@ function getDataHtml(emlData: Record<string, any>): string
 						<!-- From block -->
 						{#if $emlData.from}
 							<div>
-								<b>
+								<div class="email-header-key">
 									{_({
 										en: 'From:',
 										fr: 'De :',
 									})}
-								</b>
-								{$emlData.from.name ? `${$emlData.from.name} <${$emlData.from.email}>` : $emlData.from.email}
+								</div>
+								<div>
+									{$emlData.from.name ? `${$emlData.from.name} <${$emlData.from.email}>` : $emlData.from.email}
+								</div>
 							</div>
 						{/if}
 
 						<!-- To block -->
 						{#if $emlData.to}
 							<div>
-								<b>
+								<div class="email-header-key">
 									{_({
 										en: 'To:',
 										fr: 'À :',
 									})}
-								</b>
-								{(Array.isArray($emlData.to)
-									? $emlData.to
-									: [$emlData.to]
-								).map(to => to.name ? `${to.name} <${to.email}>` : to.email).join(', ')}
+								</div>
+								<div>
+									{(Array.isArray($emlData.to)
+										? $emlData.to
+										: [$emlData.to]
+									).map(to => to.name ? `${to.name} <${to.email}>` : to.email).join(', ')}
+								</div>
 							</div>
 						{/if}
 
 						<!-- Subject block -->
 						{#if $emlData.subject}
 							<div>
-								<b>
+								<div class="email-header-key">
 									{_({
 										en: 'Subject:',
 										fr: 'Sujet :',
 									})}
-								</b>
-								{$emlData.subject}
+								</div>
+								<div>
+									{$emlData.subject}
+								</div>
 							</div>
 						{/if}
 
 						<!-- Date block -->
 						{#if $emlData.date}
 							<div>
-								<b>
+								<div class="email-header-key">
 									{_({
 										en: 'Date:',
 										fr: 'Date :',
 									})}
-								</b>
-								{$emlData.date.toLocaleString(locale)}
+								</div>
+								<div>
+									{$emlData.date.toLocaleString(locale)}
+								</div>
 							</div>
 						{/if}
 
 						{#if $emlData.attachments}
 							<div>
-								<p>
+								<div>
 									<span class="icon icon-[mdi--paperclip] align-icon-inline"></span>
 									{$emlData.attachments.length}
 									{_({
@@ -266,7 +274,7 @@ function getDataHtml(emlData: Record<string, any>): string
 											fr: 'Voir les pièces jointes',
 										})}
 									</button>
-								</p>
+								</div>
 							</div>
 						{/if}
 					</div>
@@ -474,6 +482,13 @@ function getDataHtml(emlData: Record<string, any>): string
 						-ml-2
 						border-t
 						border-gray-200
+						;
+				}
+
+				> .email-header-key {
+					@apply
+						font-bold
+						flex-shrink-0
 						;
 				}
 			}
