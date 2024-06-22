@@ -259,7 +259,7 @@ async function closePdfFrame()
 			<div class="pdf-nav-section">
 				<p>
 					<span class="sr-only">Zoom</span>
-					100%
+					{scale ? `${Math.round(scale * 100)}%` : '...'}
 				</p>
 				<div class="buttons-group">
 					<button disabled>
