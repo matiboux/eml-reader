@@ -68,7 +68,7 @@ function getAttachmentFileName(attachment: any): string | null
 
 	{#if $openedAttachmentIndex !== null}
 		{#if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^application\/pdf(?:$|;)/)}
-			<div class="modal no-padding">
+			<div class="modal modal-fullscreen no-padding">
 				<PdfFrame
 					filename={getAttachmentFileName($emlData?.attachments?.[$openedAttachmentIndex]) ?? 'document.pdf'}
 					data64={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
@@ -76,14 +76,14 @@ function getAttachmentFileName(attachment: any): string | null
 				/>
 			</div>
 		{:else if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^image\/(?:png|jpeg|gif)(?:$|;)/)}
-			<div class="modal grow">
+			<div class="modal">
 				<img
 					src={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
 					alt={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
 				/>
 			</div>
 		{:else}
-			<div class="modal grow">
+			<div class="modal">
 				<a
 					href={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
 					download={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
@@ -129,7 +129,6 @@ function getAttachmentFileName(attachment: any): string | null
 		@apply
 			bg-gray-600
 			w-full
-			h-full
 			max-w-[calc(1000px_+_2rem)]
 			mx-auto
 			p-6
@@ -140,6 +139,12 @@ function getAttachmentFileName(attachment: any): string | null
 			border
 			border-[#00000011]
 			;
+
+		&.modal-fullscreen {
+			@apply
+				grow
+				;
+		}
 
 		&.no-padding {
 			@apply
