@@ -1,4 +1,6 @@
 <script lang="ts">
+import { unquoteString } from 'eml-parse-js'
+
 import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
 import PdfFrame from '~/components/PdfFrame.svelte'
@@ -35,7 +37,7 @@ function getAttachmentFileName(attachment: any): string | null
 		const match = /(?:N|n)ame=(?:'|")?(.+?)(?:'|")?(\s*;[\s\S]*)?$/g.exec(attachment.contentType)
 		if (match && match[1])
 		{
-			return match[1]
+			return unquoteString(match[1])
 		}
 	}
 
@@ -45,11 +47,11 @@ function getAttachmentFileName(attachment: any): string | null
 		const match = /([^/\\]+)$/.exec(attachment.name)
 		if (match && match[1])
 		{
-			return match[1]
+			return unquoteString(match[1])
 		}
 	}
 
-	return attachment?.name ?? null
+	return unquoteString(attachment?.name) ?? null
 }
 
 function getAttachmentContentType(attachment: any): string | null
