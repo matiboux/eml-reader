@@ -29,7 +29,7 @@ function onWrapperClick(event: MouseEvent)
 
 <div
 	class={Array.from(new Set([
-		'wrapper',
+		'modal-wrapper',
 		...(userClass ? userClass.split(' ') : []),
 		...($openedAttachmentIndex !== null ? ['opened'] : []),
 	])).join(' ')}
@@ -37,16 +37,14 @@ function onWrapperClick(event: MouseEvent)
 	on:click|preventDefault={onWrapperClick}
 >
 
-	<!-- <div class="modal-wrapper">
-		<div class="modal">
-			{$openedAttachmentIndex}
-			{#if $openedAttachmentIndex !== null}
-				<br />
-				{$emlData?.attachments?.[$openedAttachmentIndex]?.name} <br />
-				{$emlData?.attachments?.[$openedAttachmentIndex]?.contentType} <br />
-				{$emlData?.attachments?.[$openedAttachmentIndex]?.data64 && bytes($emlData.attachments?.[$openedAttachmentIndex]?.data64.length)}
-			{/if}
-		</div>
+	<!-- <div class="modal">
+		{$openedAttachmentIndex}
+		{#if $openedAttachmentIndex !== null}
+			<br />
+			{$emlData?.attachments?.[$openedAttachmentIndex]?.name} <br />
+			{$emlData?.attachments?.[$openedAttachmentIndex]?.contentType} <br />
+			{$emlData?.attachments?.[$openedAttachmentIndex]?.data64 && bytes($emlData.attachments?.[$openedAttachmentIndex]?.data64.length)}
+		{/if}
 	</div> -->
 
 	{#if $openedAttachmentIndex !== null}
@@ -57,24 +55,20 @@ function onWrapperClick(event: MouseEvent)
 				/>
 			</div>
 		{:else if $emlData?.attachments?.[$openedAttachmentIndex]?.contentType?.match(/^image\/(?:png|jpeg|gif)(?:$|;)/)}
-			<div class="modal-wrapper grow">
-				<div class="modal">
-					<img
-						src={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
-						alt={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
-					/>
-				</div>
+			<div class="modal grow">
+				<img
+					src={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
+					alt={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
+				/>
 			</div>
 		{:else}
-			<div class="modal-wrapper grow">
-				<div class="modal">
-					<a
-						href={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
-						download={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
-					>
-						Download
-					</a>
-				</div>
+			<div class="modal grow">
+				<a
+					href={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
+					download={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
+				>
+					Download
+				</a>
 			</div>
 		{/if}
 	{/if}
@@ -82,7 +76,11 @@ function onWrapperClick(event: MouseEvent)
 </div>
 
 <style lang="scss">
-.wrapper {
+:global(body):has(.modal-wrapper.opened) {
+	overflow: hidden;
+}
+
+.modal-wrapper {
 	@apply
 		fixed
 		bg-[#00000044]
@@ -103,19 +101,6 @@ function onWrapperClick(event: MouseEvent)
 	&:not(.opened) {
 		@apply
 			hidden
-			;
-	}
-
-	.modal-wrapper {
-		@apply
-			flex
-			flex-col
-			justify-center
-			items-center
-			w-full
-			max-w-[calc(1000px_+_2rem)]
-			max-h-full
-			mx-auto
 			;
 	}
 
