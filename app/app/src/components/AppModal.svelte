@@ -5,6 +5,7 @@ import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
 import PdfFrame from '~/components/PdfFrame.svelte'
 import ImageFrame from '~/components/ImageFrame.svelte'
+import DownloadFrame from '~/components/DownloadFrame.svelte'
 
 // Props
 let userClass: string | undefined = undefined
@@ -119,13 +120,13 @@ function getAttachmentContentType(attachment: any): string | null
 				/>
 			</div>
 		{:else}
-			<div class="modal">
-				<a
-					href={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
-					download={$emlData?.attachments?.[$openedAttachmentIndex]?.name}
-				>
-					Download
-				</a>
+			<div class="modal no-padding">
+				<DownloadFrame
+					filename={getAttachmentFileName($emlData?.attachments?.[$openedAttachmentIndex]) ?? 'document.pdf'}
+					contentType={getAttachmentContentType($emlData?.attachments?.[$openedAttachmentIndex]) ?? undefined}
+					data64={$emlData?.attachments?.[$openedAttachmentIndex]?.data64}
+					on:close={closeModal}
+				/>
 			</div>
 		{/if}
 	{/if}
