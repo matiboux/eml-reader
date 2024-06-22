@@ -35,7 +35,11 @@ function getInitialScale(page: any)
 
 function handlePage(page: any)
 {
-	scale = getInitialScale(page)
+	if (scale === null)
+	{
+		scale = getInitialScale(page)
+	}
+
 	var viewport = page.getViewport({ scale: scale })
 
 	// Prepare canvas using PDF page dimensions
@@ -85,15 +89,34 @@ async function loadPdf(data: string)
 		})
 }
 
+let resizeHandlerTimeout: NodeJS.Timeout | null = null
+
 function onPdfContentResize(_: ResizeObserverEntry[], __: ResizeObserver)
 {
-	if (!pdfDocument)
+	if (resizeHandlerTimeout !== null)
 	{
-		return
+		clearTimeout(resizeHandlerTimeout)
 	}
 
-	// Fetch the current page
-	pdfDocument.getPage(currPage).then(handlePage)
+	resizeHandlerTimeout = setTimeout(() =>
+		{
+			if (!pdfDocument)
+			{
+				return
+			}
+
+			// Fetch the current page
+			pdfDocument.getPage(currPage).then(
+				(page: any) =>
+				{
+					// Reset the scale
+					scale = getInitialScale(page)
+
+					// Re-render the page
+					return handlePage(page)
+				},
+			)
+		}, 50)
 }
 
 onMount(async () =>
