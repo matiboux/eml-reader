@@ -217,10 +217,24 @@ function getDataHtml(emlData: Record<string, any>): string
 									})}
 								</div>
 								<div>
-									{(Array.isArray($emlData.to)
-										? $emlData.to
-										: [$emlData.to]
-									).map(to => to.name ? `${to.name} <${to.email}>` : to.email).join(', ')}
+									{@html
+										(Array.isArray($emlData.to)
+											? $emlData.to
+											: [$emlData.to]
+										)
+											.map(to =>
+												(text =>
+												{
+													const p = document.createElement('p')
+													p.textContent = text
+													const escapedHtml = p.innerHTML
+													p.remove()
+													return escapedHtml
+												})
+												(to.name ? `${to.name} <${to.email}>` : to.email)
+											)
+											.join(` <span>;</span> `)
+									}
 								</div>
 							</div>
 						{/if}
@@ -489,6 +503,12 @@ function getDataHtml(emlData: Record<string, any>): string
 					@apply
 						font-bold
 						flex-shrink-0
+						;
+				}
+
+				> div > :global(span) {
+					@apply
+						text-gray-400
 						;
 				}
 			}
