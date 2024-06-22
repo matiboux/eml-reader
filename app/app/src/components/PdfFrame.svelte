@@ -35,11 +35,7 @@ function getInitialScale(page: any)
 
 function handlePage(page: any)
 {
-	if (scale === null)
-	{
-		scale = getInitialScale(page)
-	}
-
+	scale = getInitialScale(page)
 	var viewport = page.getViewport({ scale: scale })
 
 	// Prepare canvas using PDF page dimensions
@@ -80,13 +76,24 @@ async function loadPdf(data: string)
 	const PdfJS = await import('pdfjs-dist')
 	const PdfJSWorker = (await import('pdfjs-dist/build/pdf.worker.min.mjs?url')).default
 	PdfJS.GlobalWorkerOptions.workerSrc = PdfJSWorker
-	PdfJS.getDocument({ data: data }).promise.then((pdf: any) =>
+	await PdfJS.getDocument({ data: data }).promise.then((pdf: any) =>
 		{
 			pdfDocument = pdf
 
 			// Fetch the current page
 			pdf.getPage(currPage).then(handlePage)
 		})
+}
+
+function onPdfContentResize(_: ResizeObserverEntry[], __: ResizeObserver)
+{
+	if (!pdfDocument)
+	{
+		return
+	}
+
+	// Fetch the current page
+	pdfDocument.getPage(currPage).then(handlePage)
 }
 
 onMount(async () =>
@@ -97,6 +104,7 @@ onMount(async () =>
 		}
 
 		loadPdf(atob(data64))
+		new ResizeObserver(onPdfContentResize).observe(contentWrapper)
 	})
 
 onDestroy(async () =>
