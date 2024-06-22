@@ -113,7 +113,21 @@ function onPdfContentMouseWheel(event: WheelEvent)
 	console.log('mousewheel', event)
 }
 
-function onPdfContentKeyUp(event: KeyboardEvent)
+async function loadPreviousPage()
+{
+	// Previous page
+	currPage = Math.max(currPage - 1, 1)
+	await pdfDocument?.getPage(currPage).then(handlePage)
+}
+
+async function loadNextPage()
+{
+	// Next page
+	currPage = Math.min(currPage + 1, pdfDocument.numPages)
+	await pdfDocument?.getPage(currPage).then(handlePage)
+}
+
+async function onPdfContentKeyUp(event: KeyboardEvent)
 {
 	if (!pdfDocument)
 	{
@@ -126,24 +140,19 @@ function onPdfContentKeyUp(event: KeyboardEvent)
 		case 'ArrowLeft':
 		{
 			// Previous page
-			currPage = Math.max(currPage - 1, 1)
+			event.preventDefault()
+			await loadPreviousPage()
 			break
 		}
 		case 'ArrowDown':
 		case 'ArrowRight':
 		{
 			// Next page
-			currPage = Math.min(currPage + 1, pdfDocument.numPages)
+			event.preventDefault()
+			await loadNextPage()
 			break
 		}
-		default:
-		{
-			return
-		}
 	}
-
-	event.preventDefault()
-	pdfDocument.getPage(currPage).then(handlePage)
 }
 </script>
 
