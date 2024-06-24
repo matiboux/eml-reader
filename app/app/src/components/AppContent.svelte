@@ -589,6 +589,7 @@ function getHtml(emlData: Record<string, any>): string
 						items-center
 						px-2
 						py-1
+						whitespace-nowrap
 						rounded-lg
 						border
 						border-[#00000011]
