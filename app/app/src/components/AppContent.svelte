@@ -22,6 +22,24 @@ const _ = i18nFactory(locale)
 type MenuOption = 'headers' | 'body' | 'attachments'
 
 let menuSelected: MenuOption = 'body'
+let showHtml: boolean = true
+
+emlData.subscribe(data =>
+{
+	if (!data)
+	{
+		return
+	}
+
+	if (!data.html)
+	{
+		showHtml = false
+	}
+	else if (!data.text)
+	{
+		showHtml = true
+	}
+})
 
 function handleMenuSelect(value: MenuOption)
 {
@@ -56,11 +74,16 @@ function getAttachmentName(attachment: any): string
 	return unquoteString(match ? match[1] : attachment.name)
 }
 
-function getDataHtml(emlData: Record<string, any>): string
+function getPlainText(emlData: Record<string, any>): string
+{
+	return `<pre>${emlData.text}</pre>`
+}
+
+function getHtml(emlData: Record<string, any>): string
 {
 	if (!emlData.html)
 	{
-		return `<pre>${emlData.text}</pre>`
+		return getPlainText(emlData)
 	}
 
 	let html = emlData.html
@@ -192,103 +215,129 @@ function getDataHtml(emlData: Record<string, any>): string
 
 				{:else}
 					<div class="email-header">
-						<!-- From block -->
-						{#if $emlData.from}
-							<div>
-								<div class="email-header-key">
-									{_({
-										en: 'From:',
-										fr: 'De :',
-									})}
-								</div>
+						<div class="left">
+							<!-- From block -->
+							{#if $emlData.from}
 								<div>
-									{$emlData.from.name ? `${$emlData.from.name} <${$emlData.from.email}>` : $emlData.from.email}
-								</div>
-							</div>
-						{/if}
-
-						<!-- To block -->
-						{#if $emlData.to}
-							<div>
-								<div class="email-header-key">
-									{_({
-										en: 'To:',
-										fr: 'À :',
-									})}
-								</div>
-								<div>
-									{@html
-										(Array.isArray($emlData.to)
-											? $emlData.to
-											: [$emlData.to]
-										)
-											.map(to =>
-												(text =>
-												{
-													const p = document.createElement('p')
-													p.textContent = text
-													const escapedHtml = p.innerHTML
-													p.remove()
-													return escapedHtml
-												})
-												(to.name ? `${to.name} <${to.email}>` : to.email)
-											)
-											.join(` <span>;</span> `)
-									}
-								</div>
-							</div>
-						{/if}
-
-						<!-- Subject block -->
-						{#if $emlData.subject}
-							<div>
-								<div class="email-header-key">
-									{_({
-										en: 'Subject:',
-										fr: 'Sujet :',
-									})}
-								</div>
-								<div>
-									{$emlData.subject}
-								</div>
-							</div>
-						{/if}
-
-						<!-- Date block -->
-						{#if $emlData.date}
-							<div>
-								<div class="email-header-key">
-									{_({
-										en: 'Date:',
-										fr: 'Date :',
-									})}
-								</div>
-								<div>
-									{$emlData.date.toLocaleString(locale)}
-								</div>
-							</div>
-						{/if}
-
-						{#if $emlData.attachments}
-							<div>
-								<div>
-									<span class="icon icon-[mdi--paperclip] align-icon-inline"></span>
-									{$emlData.attachments.length}
-									{_({
-										en: $emlData.attachments.length > 1 ? 'attachments' : 'attachment',
-										fr: $emlData.attachments.length > 1 ? 'pièces jointes' : 'pièce jointe',
-									})}
-									–
-									<button
-										class="text-blue-600 underline"
-										on:click={handleMenuSelect('attachments')}
-									>
+									<div class="email-header-key">
 										{_({
-											en: 'See attachments',
-											fr: 'Voir les pièces jointes',
+											en: 'From:',
+											fr: 'De :',
 										})}
-									</button>
+									</div>
+									<div>
+										{$emlData.from.name ? `${$emlData.from.name} <${$emlData.from.email}>` : $emlData.from.email}
+									</div>
 								</div>
+							{/if}
+
+							<!-- To block -->
+							{#if $emlData.to}
+								<div>
+									<div class="email-header-key">
+										{_({
+											en: 'To:',
+											fr: 'À :',
+										})}
+									</div>
+									<div>
+										{@html
+											(Array.isArray($emlData.to)
+												? $emlData.to
+												: [$emlData.to]
+											)
+												.map(to =>
+													(text =>
+													{
+														const p = document.createElement('p')
+														p.textContent = text
+														const escapedHtml = p.innerHTML
+														p.remove()
+														return escapedHtml
+													})
+													(to.name ? `${to.name} <${to.email}>` : to.email)
+												)
+												.join(` <span>;</span> `)
+										}
+									</div>
+								</div>
+							{/if}
+
+							<!-- Subject block -->
+							{#if $emlData.subject}
+								<div>
+									<div class="email-header-key">
+										{_({
+											en: 'Subject:',
+											fr: 'Sujet :',
+										})}
+									</div>
+									<div>
+										{$emlData.subject}
+									</div>
+								</div>
+							{/if}
+
+							<!-- Date block -->
+							{#if $emlData.date}
+								<div>
+									<div class="email-header-key">
+										{_({
+											en: 'Date:',
+											fr: 'Date :',
+										})}
+									</div>
+									<div>
+										{$emlData.date.toLocaleString(locale)}
+									</div>
+								</div>
+							{/if}
+
+							{#if $emlData.attachments}
+								<div>
+									<div>
+										<span class="icon icon-[mdi--paperclip] align-icon-inline"></span>
+										{$emlData.attachments.length}
+										{_({
+											en: $emlData.attachments.length > 1 ? 'attachments' : 'attachment',
+											fr: $emlData.attachments.length > 1 ? 'pièces jointes' : 'pièce jointe',
+										})}
+										–
+										<button
+											class="text-blue-600 underline"
+											on:click={handleMenuSelect('attachments')}
+										>
+											{_({
+												en: 'See attachments',
+												fr: 'Voir les pièces jointes',
+											})}
+										</button>
+									</div>
+								</div>
+							{/if}
+						</div>
+						{#if $emlData.html && $emlData.text}
+							<div class="right">
+								<label class="html-toggle">
+									<input
+										type="checkbox"
+										bind:checked={showHtml}
+									/>
+									{#if showHtml}
+										<span class="icon icon-[mdi--toggle-switch]"></span>
+										<span>
+											HTML
+										</span>
+									{:else}
+										<span class="icon icon-[mdi--toggle-switch-off-outline]"></span>
+										<span>
+											{_({
+												en: 'Plain text',
+												fr: 'Texte brut',
+											})}
+										</span>
+									{/if}
+								</label>
 							</div>
 						{/if}
 					</div>
@@ -298,7 +347,7 @@ function getDataHtml(emlData: Record<string, any>): string
 						<div class="email-frame">
 							<iframe
 								class="w-full h-full"
-								srcdoc={getDataHtml($emlData)}
+								srcdoc={showHtml ? getHtml($emlData) : getPlainText($emlData)}
 							></iframe>
 						</div>
 					{/if}
@@ -471,45 +520,126 @@ function getDataHtml(emlData: Record<string, any>): string
 
 		.email-header {
 			@apply
-				relative
 				flex
-				flex-col
 				items-start
-				gap-2
+				gap-4
 				px-6
 				pt-6
 				;
 
-			> div {
+			> .left {
 				@apply
+					grow
+					relative
 					flex
+					flex-col
 					items-start
 					gap-2
 					;
 
-				+ div::before {
+				> div {
 					@apply
-						content-['']
-						absolute
-						w-[calc(100%_-_2rem)]
-						-mt-1
-						-ml-2
-						border-t
-						border-gray-200
+						flex
+						items-start
+						gap-2
 						;
-				}
 
-				> .email-header-key {
-					@apply
-						font-bold
-						flex-shrink-0
-						;
-				}
+					+ div::before {
+						@apply
+							content-['']
+							absolute
+							w-[calc(100%)]
+							-mt-1
+							-ml-2
+							border-t
+							border-gray-200
+							;
+					}
 
-				> div > :global(span) {
+					> .email-header-key {
+						@apply
+							font-bold
+							flex-shrink-0
+							;
+					}
+
+					> div > :global(span) {
+						@apply
+							text-gray-400
+							;
+					}
+				}
+			}
+
+			> .right {
+				@apply
+					relative
+					flex
+					flex-col
+					items-start
+					gap-2
+					;
+
+				.html-toggle {
 					@apply
-						text-gray-400
+						bg-gray-200
+						relative
+						flex
+						flex-col
+						items-center
+						px-2
+						py-1
+						whitespace-nowrap
+						rounded-lg
+						border
+						border-[#00000011]
+						cursor-pointer
 						;
+
+					&:hover {
+						@apply
+							bg-gray-300
+							;
+					}
+
+					> input[type="checkbox"] {
+						@apply
+							hidden
+							;
+					}
+
+					> span {
+						@apply
+							text-xs
+							;
+					}
+
+					> .icon {
+						@apply
+							text-gray-600
+							text-xl
+							;
+					}
+
+					@media (min-width: 600px) {
+						> span {
+							@apply
+								text-sm
+								;
+						}
+
+						> .icon {
+							@apply
+								text-2xl
+								;
+						}
+					}
+
+					> input[type="checkbox"]:checked ~ .icon {
+						@apply
+							text-blue-600
+							;
+					}
 				}
 			}
 		}
