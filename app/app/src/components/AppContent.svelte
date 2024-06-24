@@ -22,7 +22,24 @@ const _ = i18nFactory(locale)
 type MenuOption = 'headers' | 'body' | 'attachments'
 
 let menuSelected: MenuOption = 'body'
-let showHtml: boolean = $emlData?.html ? true : false
+let showHtml: boolean = true
+
+emlData.subscribe(data =>
+{
+	if (!data)
+	{
+		return
+	}
+
+	if (!data.html)
+	{
+		showHtml = false
+	}
+	else if (!data.text)
+	{
+		showHtml = true
+	}
+})
 
 function handleMenuSelect(value: MenuOption)
 {
