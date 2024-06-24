@@ -608,11 +608,31 @@ function getHtml(emlData: Record<string, any>): string
 							;
 					}
 
+					> span {
+						@apply
+							text-xs
+							;
+					}
+
 					> .icon {
 						@apply
 							text-gray-600
-							text-2xl
+							text-xl
 							;
+					}
+
+					@media (min-width: 600px) {
+						> span {
+							@apply
+								text-sm
+								;
+						}
+
+						> .icon {
+							@apply
+								text-2xl
+								;
+						}
 					}
 
 					> input[type="checkbox"]:checked ~ .icon {
