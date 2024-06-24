@@ -22,6 +22,7 @@ const _ = i18nFactory(locale)
 type MenuOption = 'headers' | 'body' | 'attachments'
 
 let menuSelected: MenuOption = 'body'
+let showHtml: boolean = true
 
 function handleMenuSelect(value: MenuOption)
 {
@@ -294,7 +295,26 @@ function getDataHtml(emlData: Record<string, any>): string
 							{/if}
 						</div>
 						<div class="right">
-							...
+							<label class="html-toggle">
+								<input
+									type="checkbox"
+									bind:checked={showHtml}
+								/>
+								{#if showHtml}
+									<span class="icon icon-[mdi--toggle-switch]"></span>
+									<span>
+										HTML
+									</span>
+								{:else}
+									<span class="icon icon-[mdi--toggle-switch-off-outline]"></span>
+									<span>
+										{_({
+											en: 'Plain text',
+											fr: 'Texte brut',
+										})}
+									</span>
+								{/if}
+							</label>
 						</div>
 					</div>
 
@@ -535,6 +555,47 @@ function getDataHtml(emlData: Record<string, any>): string
 					items-start
 					gap-2
 					;
+
+				.html-toggle {
+					@apply
+						bg-gray-200
+						relative
+						flex
+						flex-col
+						items-center
+						px-2
+						py-1
+						rounded-lg
+						border
+						border-[#00000011]
+						cursor-pointer
+						;
+
+					&:hover {
+						@apply
+							bg-gray-300
+							;
+					}
+
+					> input[type="checkbox"] {
+						@apply
+							hidden
+							;
+					}
+
+					> .icon {
+						@apply
+							text-gray-600
+							text-2xl
+							;
+					}
+
+					> input[type="checkbox"]:checked ~ .icon {
+						@apply
+							text-blue-600
+							;
+					}
+				}
 			}
 		}
 
