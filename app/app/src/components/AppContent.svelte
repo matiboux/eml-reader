@@ -57,11 +57,16 @@ function getAttachmentName(attachment: any): string
 	return unquoteString(match ? match[1] : attachment.name)
 }
 
-function getDataHtml(emlData: Record<string, any>): string
+function getPlainText(emlData: Record<string, any>): string
+{
+	return `<pre>${emlData.text}</pre>`
+}
+
+function getHtml(emlData: Record<string, any>): string
 {
 	if (!emlData.html)
 	{
-		return `<pre>${emlData.text}</pre>`
+		return getPlainText(emlData)
 	}
 
 	let html = emlData.html
@@ -323,7 +328,7 @@ function getDataHtml(emlData: Record<string, any>): string
 						<div class="email-frame">
 							<iframe
 								class="w-full h-full"
-								srcdoc={getDataHtml($emlData)}
+								srcdoc={showHtml ? getHtml($emlData) : getPlainText($emlData)}
 							></iframe>
 						</div>
 					{/if}
