@@ -22,7 +22,7 @@ const _ = i18nFactory(locale)
 type MenuOption = 'headers' | 'body' | 'attachments'
 
 let menuSelected: MenuOption = 'body'
-let showHtml: boolean = true
+let showHtml: boolean = $emlData?.html ? true : false
 
 function handleMenuSelect(value: MenuOption)
 {
@@ -299,28 +299,30 @@ function getHtml(emlData: Record<string, any>): string
 								</div>
 							{/if}
 						</div>
-						<div class="right">
-							<label class="html-toggle">
-								<input
-									type="checkbox"
-									bind:checked={showHtml}
-								/>
-								{#if showHtml}
-									<span class="icon icon-[mdi--toggle-switch]"></span>
-									<span>
-										HTML
-									</span>
-								{:else}
-									<span class="icon icon-[mdi--toggle-switch-off-outline]"></span>
-									<span>
-										{_({
-											en: 'Plain text',
-											fr: 'Texte brut',
-										})}
-									</span>
-								{/if}
-							</label>
-						</div>
+						{#if $emlData.html && $emlData.text}
+							<div class="right">
+								<label class="html-toggle">
+									<input
+										type="checkbox"
+										bind:checked={showHtml}
+									/>
+									{#if showHtml}
+										<span class="icon icon-[mdi--toggle-switch]"></span>
+										<span>
+											HTML
+										</span>
+									{:else}
+										<span class="icon icon-[mdi--toggle-switch-off-outline]"></span>
+										<span>
+											{_({
+												en: 'Plain text',
+												fr: 'Texte brut',
+											})}
+										</span>
+									{/if}
+								</label>
+							</div>
+						{/if}
 					</div>
 
 					<!-- Body block -->
