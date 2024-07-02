@@ -44,6 +44,29 @@ function getInitialScale(page: any)
 
 async function handlePage(page: any)
 {
+	// console.log('Loading page ' + currPage)
+	// var canvas = document.createElement( "canvas" )
+	// canvas.width = 2000 // Large width (same as Github is using)
+
+	// var viewport = page.getViewport({ scale: canvas.width / page.getViewport({ scale: 1.0 }).width })
+
+	// var context = canvas.getContext('2d')
+	// canvas.height = viewport.height
+	// canvas.width = viewport.width
+
+	// // Render PDF page into canvas context
+	// var renderTask = page.render({canvasContext: context, viewport: viewport})
+
+	// //Add it to the web page
+	// document.getElementById('embed').appendChild( canvas )
+
+	// // Move to next page
+	// currPage++
+	// if(currPage > numPages)
+	// 	$('#embed .embed-title .embed-status').hide()
+	// else if(thePDF !== null) /* && currPage <= numPages */
+	// 	thePDF.getPage(currPage).then(handlePages)
+
 	if (scale === null)
 	{
 		scale = getInitialScale(page)
@@ -88,6 +111,20 @@ async function handlePage(page: any)
 
 async function loadPdf(data: string)
 {
+	// // Asynchronous download of PDF
+	// var loadingTask = pdfjsLib.getDocument(url)
+	// loadingTask.promise.then(function(pdf) {
+	// 	thePDF = pdf // pdf object
+	// 	numPages = pdf.numPages // Page count
+
+	// 	// Start with first page
+	// 	pdf.getPage(currPage).then(handlePages)
+	// }, function (error) {
+	// 	// PDF loading error
+	// 	$('#embed .embed-title .embed-status').find('i').removeClass().addClass('fas fa-exclamation-triangle fa-fw')
+	// 	$('#embed .embed-error').text('PDF loading error: ' + error).show()
+	// })
+
 	const PdfJS = await import('pdfjs-dist')
 	const PdfJSWorker = (await import('pdfjs-dist/build/pdf.worker.min.mjs?url')).default
 	PdfJS.GlobalWorkerOptions.workerSrc = PdfJSWorker
