@@ -18,8 +18,6 @@ function getLocaleUrlList(url: URL | string, excludeLocale?: string): {
 				})
 			)
 
-	console.log('list', list)
-
 	if (excludeLocale !== undefined)
 	{
 		return list.filter(({ locale }) => locale !== excludeLocale)

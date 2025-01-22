@@ -1,31 +1,27 @@
-import type { AstroUserConfig } from 'astro/config'
+import type { AstroConfig } from 'astro'
 
-import type Site from '~/types/Site.d.ts'
+type LocaleKeys = Record<string, Record<string, string>>
+type I18nConfig = AstroConfig['i18n'] & { localeKeys?: LocaleKeys }
 
-export const site: Site = {
-	title: 'EML Reader',
-	description: {
-		'en': 'Online tool to read and display the content of an EML file.',
-		'fr': 'Outil en ligne pour lire et afficher le contenu d\'un fichier EML.',
-	},
-	author: 'Matiboux',
-	themeColor: '#ffffff',
-}
-
-export const i18n =
-{
-	defaultLocale: 'en',
+export const i18n: I18nConfig = {
 	locales: [
 		{
-			codes: ['en', 'en-US'],
+			codes: ['en', 'en_US'],
 			path: 'en',
 		},
 		{
-			codes: ['fr', 'fr-FR'],
+			codes: ['fr', 'fr_FR'],
 			path: 'fr',
 		},
 	],
+	defaultLocale: 'en',
+	fallback: {
+		fr: 'en',
+	},
+	// localeKeys: {},
 	routing: {
 		prefixDefaultLocale: false,
+		redirectToDefaultLocale: true,
+		fallbackType: 'rewrite',
 	},
-} as const satisfies AstroUserConfig['i18n']
+}
