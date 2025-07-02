@@ -95,6 +95,7 @@ async function onChange(event: Event)
 				<input
 					type="file"
 					class="form-input"
+					accept="message/rfc822"
 					on:change={onChange}
 				/>
 			</div>
