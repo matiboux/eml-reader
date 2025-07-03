@@ -12,7 +12,7 @@ docker compose watch
 # or: docker compose up
 ```
 
-The site will be available at [http://localhost](http://localhost).
+The site will be available at [http://localhost:8080](http://localhost:8080).
 
 
 ## License
