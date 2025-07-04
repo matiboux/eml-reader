@@ -6,6 +6,9 @@ x-common:
     environment: &app_environment
       GITHUB_REPOSITORY_URL: ${GITHUB_REPOSITORY_URL:-}
       GITHUB_SHA: ${GITHUB_SHA:-}
+      ASTRO_SITE_URL: ${ASTRO_SITE_URL:-}
+      ASTRO_BASE_PATH: ${ASTRO_BASE_PATH:-}
+      ASTRO_ASSETS_PREFIX: ${ASTRO_ASSETS_PREFIX:-}
 
 services:
 
