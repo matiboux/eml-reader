@@ -18,6 +18,7 @@ services:
       target: app_prod
       args:
         PORT: "${HTTP_DOCKER_PORT:-8080}"
+        BUILD_CHECK: "${BUILD_CHECK:-true}"
         <<: [ *app_environment ]
     # Deploy
     environment:
