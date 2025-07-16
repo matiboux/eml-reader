@@ -7,7 +7,7 @@ services:
     image: ${IMAGES_PREFIX:-app}-dev:${IMAGES_TAG:-latest}
     build:
       target: app_dev
-    # Deploy override
+    # Deploy
     develop:
       watch:
         # Docker image

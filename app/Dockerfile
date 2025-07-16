@@ -7,7 +7,7 @@
 # Upstream images
 
 FROM node:22-slim AS node_upstream
-FROM nginx:alpine AS nginx_upstream
+FROM bitnami/nginx:1.29 AS nginx_upstream
 
 
 # --
@@ -89,7 +89,7 @@ ARG ASTRO_ASSETS_PREFIX=""
 ENV ASTRO_ASSETS_PREFIX=${ASTRO_ASSETS_PREFIX}
 
 # Build application
-ARG BUILD_CHECK=true
+ARG BUILD_CHECK='true'
 RUN if [ "${BUILD_CHECK}" = "true" ]; then \
 		npm run build; \
 	else \
@@ -104,18 +104,11 @@ FROM nginx_upstream AS app_prod
 
 # Set runtime environment
 ENV APP_ENV=prod
-ENV NODE_ENV=production
 
-# Set app directory
-WORKDIR /usr/share/nginx/html
-
-# Copy built static website files
+# Copy app production build
 COPY --from=app_prod_build --link /app/dist .
 
 # Set exposed port
 ARG PORT=8080
-ENV PORT=${PORT}
+ENV NGINX_HTTP_PORT_NUMBER=${PORT}
 EXPOSE ${PORT}
-
-# Start nginx server
-CMD [ "nginx", "-g", "daemon off;" ]
