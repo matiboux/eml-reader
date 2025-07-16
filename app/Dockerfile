@@ -84,6 +84,9 @@ ENV GITHUB_SHA=${GITHUB_SHA}
 
 # Build application
 ARG BUILD_CHECK=true
+ARG ASTRO_SITE_URL
+ARG ASTRO_BASE_PATH
+ARG ASTRO_ASSETS_PREFIX
 RUN if [ "${BUILD_CHECK}" = "true" ]; then \
 		npm run build; \
 	else \
