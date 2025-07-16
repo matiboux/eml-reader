@@ -34,7 +34,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    environment: github-pages
     timeout-minutes: 15
 
     steps:
