@@ -7,11 +7,7 @@ services:
     image: ${IMAGES_PREFIX:-app}-dev:${IMAGES_TAG:-latest}
     build:
       target: app_dev
-      args:
-        PORT: "${HTTP_DOCKER_PORT:-8080}"
     # Deploy
-    ports: !override
-      - "${HTTP_PORT:-8080}:${HTTP_DOCKER_PORT:-8080}" # HTTP
     develop:
       watch:
         # Docker image
