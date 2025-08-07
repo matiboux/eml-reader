@@ -29,7 +29,7 @@
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/twemoji": "^1.2.2",
     "@iconify/tailwind": "^1.2.0",
-    "astro": "^5.5.4",
+    "astro": "^5.12.8",
     "bytes": "^3.1.2",
     "eml-parse-js": "^1.1.15",
     "nanostores": "^0.11.3",
