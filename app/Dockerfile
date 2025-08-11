@@ -4,6 +4,12 @@
 
 
 # --
+# Global build arguments
+
+ARG UID=1001
+
+
+# --
 # Upstream images
 
 FROM node:22-slim AS node_upstream
@@ -18,18 +24,66 @@ FROM node_upstream AS app_base
 # Set app directory
 WORKDIR /app
 
+# Use temporary directory as home
+ENV HOME=/tmp
+
 
 # --
-# Npm image
+# Build base image
 
-FROM app_base AS app_npm
+FROM app_base AS app_build_base
 
-# Mount source code as volume
+# Install pnpm
+RUN --mount=type=cache,target=~/.npm \
+	npm install -g pnpm
+
+
+# --
+# Build dev image
+
+FROM app_build_base AS app_build_dev
+
+# Copy app build configuration
+COPY --link ./app/package.json ./app/pnpm-lock.yaml ./
+
+# Install app development dependencies
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+	pnpm install --frozen-lockfile
+
+
+# --
+# CLI image
+
+FROM app_build_base AS app_cli
+
+ARG UID
+
+# Install sudo
+# (hadolint: Ignore non-pinned apt package version)
+# hadolint ignore=DL3008
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
+	--mount=type=cache,sharing=locked,target=/var/lib/apt \
+	apt-get update && \
+	apt-get install -y --no-install-recommends sudo && \
+	echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# Create user 'user' in group 'root' & 'sudo'
+RUN USERNAME="$(getent passwd "${UID}" | cut -d: -f1)"; \
+	if [ -z "${USERNAME}" ]; then \
+		useradd -lm -u "${UID}" -U -G 0,sudo user; \
+	else \
+		usermod -a -G 0,sudo "${USERNAME}"; \
+	fi
+
+# Run as non-root user
+USER ${UID}:0
+
+# Mount source code
 VOLUME /app
 
-# Run npm command
-COPY --link --chmod=755 ./docker/npm-entrypoint.sh /usr/local/bin/app-npm-entrypoint
-ENTRYPOINT [ "app-npm-entrypoint" ]
+# Run CLI command
+COPY --link --chmod=755 ./docker/cli-entrypoint.sh /usr/local/bin/app-cli-entrypoint
+ENTRYPOINT [ "app-cli-entrypoint" ]
 CMD [ "--help" ]
 
 
