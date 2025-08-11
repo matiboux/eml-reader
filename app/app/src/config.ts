@@ -1,7 +1,7 @@
 import type { AstroConfig } from 'astro'
 
-// import en from './i18n/locales/en'
-// import fr from './i18n/locales/fr'
+import en from './i18n/locales/en'
+import fr from './i18n/locales/fr'
 
 export interface LocaleKeys
 {
@@ -31,10 +31,10 @@ export const i18n = {
 	fallback: {
 		fr: 'en',
 	},
-	// localeKeys: {
-	// 	en,
-	// 	fr,
-	// },
+	localeKeys: {
+		en,
+		fr,
+	},
 	routing: {
 		prefixDefaultLocale: false,
 		redirectToDefaultLocale: true,
