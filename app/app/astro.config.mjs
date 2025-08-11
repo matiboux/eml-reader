@@ -19,20 +19,6 @@ export default defineConfig({
 		plugins: [
 			tailwindcss(),
 		],
-	},
-	i18n: i18n,
-	env: {
-		schema: {
-			// Deployment configuration
-			GITHUB_REPOSITORY_URL: envField.string({ context: 'client', access: 'public', optional: true }),
-			GITHUB_SHA: envField.string({ context: 'client', access: 'public', optional: true }),
-			VERSION_TAG: envField.string({ context: 'client', access: 'public', optional: true }),
-			// Application configuration
-			// Add env vars for your application here.
-		},
-		validateSecrets: true,
-	},
-	vite: {
 		optimizeDeps: {
 			esbuildOptions: {
 				// Node.js global to browser globalThis
@@ -47,5 +33,17 @@ export default defineConfig({
 				],
 			},
 		},
+	},
+	i18n: i18n,
+	env: {
+		schema: {
+			// Deployment configuration
+			GITHUB_REPOSITORY_URL: envField.string({ context: 'client', access: 'public', optional: true }),
+			GITHUB_SHA: envField.string({ context: 'client', access: 'public', optional: true }),
+			VERSION_TAG: envField.string({ context: 'client', access: 'public', optional: true }),
+			// Application configuration
+			// Add env vars for your application here.
+		},
+		validateSecrets: true,
 	},
 })
