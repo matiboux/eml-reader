@@ -1,6 +1,6 @@
-import { defineConfig } from 'astro/config'
+import { defineConfig, envField } from 'astro/config'
 import svelte from '@astrojs/svelte'
-import tailwind from '@astrojs/tailwind'
+import tailwindcss from '@tailwindcss/vite'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 
 import { i18n } from '/src/config'
@@ -11,6 +11,26 @@ export default defineConfig({
 	base: process.env.ASTRO_BASE_PATH || undefined,
 	build: {
 		assetsPrefix: process.env.ASTRO_ASSETS_PREFIX || undefined,
+	},
+	integrations: [
+		svelte(),
+	],
+	vite: {
+		plugins: [
+			tailwindcss(),
+		],
+	},
+	i18n: i18n,
+	env: {
+		schema: {
+			// Deployment configuration
+			GITHUB_REPOSITORY_URL: envField.string({ context: 'client', access: 'public', optional: true }),
+			GITHUB_SHA: envField.string({ context: 'client', access: 'public', optional: true }),
+			VERSION_TAG: envField.string({ context: 'client', access: 'public', optional: true }),
+			// Application configuration
+			// Add env vars for your application here.
+		},
+		validateSecrets: true,
 	},
 	vite: {
 		optimizeDeps: {
@@ -28,9 +48,4 @@ export default defineConfig({
 			},
 		},
 	},
-	i18n: i18n,
-	integrations: [
-		svelte(),
-		tailwind(),
-	],
 })
