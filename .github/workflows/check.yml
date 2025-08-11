@@ -1,5 +1,13 @@
 name: Check CI
 
+# GitHub variables:
+# - VERSION_TAG
+# - ASTRO_SITE_URL
+# - ASTRO_BASE_PATH
+# - ASTRO_ASSETS_PREFIX
+
+# GitHub secrets: N/A
+
 on:
 
   # Run on pull requests to primary branches
@@ -7,10 +15,12 @@ on:
     branches:
       # Production
       - main
+      # Staging
+      - staging
       # Development
       - dev
     paths:
-      # CI files
+      # CI/CD files
       - '.github/workflows/check.yml'
       - 'docker-compose.yml'
       - 'docker-compose.cicd.yml'
@@ -21,7 +31,7 @@ on:
   # Run on manual triggers
   workflow_dispatch:
 
-# Set GITHUB_TOKEN permissions for the workflow
+# Set default GITHUB_TOKEN permissions for the workflow
 permissions:
   contents: read
 
@@ -36,7 +46,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
 
@@ -47,29 +57,50 @@ jobs:
 
       # Execution steps
 
+      - name: Pull dependencies
+        run: |
+          # docker compose pull --ignore-buildable
+          docker compose \
+            -f ./docker-compose.yml -f ./docker-compose.cicd.yml \
+            --env-file .env \
+            pull --ignore-buildable
+
       - name: Build for production
         env:
+          # Build configuration
+          BUILD_CHECK: 'true' # Run type checks
+          # Deployment configuration
           GITHUB_REPOSITORY_URL: https://github.com/${{ github.repository }}
           GITHUB_SHA: ${{ github.sha }}
-          BUILD_CHECK: "true" # Run type checks
+          VERSION_TAG: ${{ vars.VERSION_TAG }}
+          # Astro configuration
+          ASTRO_SITE_URL: ${{ vars.ASTRO_SITE_URL }}
+          ASTRO_BASE_PATH: ${{ vars.ASTRO_BASE_PATH }}
+          ASTRO_ASSETS_PREFIX: ${{ vars.ASTRO_ASSETS_PREFIX }}
+          # Application configuration
+          # Add env vars for your application here.
         run: |
           # docker compose build
+          echo '::group::Build details'
+          export DOCKER_UID="$(id -u)"
           docker compose \
-              -f ./docker-compose.yml -f ./docker-compose.cicd.yml \
-              --env-file .env \
-              build
+            -f ./docker-compose.yml -f ./docker-compose.cicd.yml \
+            --env-file .env \
+            build
+          echo '::endgroup::'
 
       - name: Copy application files
         run: |
           # docker compose up
+          export DOCKER_UID="$(id -u)"
           docker compose \
-              -f ./docker-compose.yml -f ./docker-compose.cicd.yml \
-              --env-file .env \
-              up
+            -f ./docker-compose.yml -f ./docker-compose.cicd.yml \
+            --env-file .env \
+            up
 
       - name: Check application files
         run: |
           # Check application files
           [ -d ./app/dist ] && [ $(ls -1 ./app/dist | wc -l) -gt 0 ] \
-            && echo "Application files found" \
-            || ( echo "No application files found" && exit 1 )
+            && echo 'Application files found' \
+            || ( echo 'No application files found' && exit 1 )
