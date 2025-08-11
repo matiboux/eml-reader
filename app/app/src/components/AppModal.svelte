@@ -138,6 +138,8 @@ function getAttachmentContentType(attachment: any): string | null
 </div>
 
 <style lang="scss">
+@reference "tailwindcss/theme";
+
 :global(body):has(.modal-wrapper.opened) {
 	overflow: hidden;
 }

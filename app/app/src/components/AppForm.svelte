@@ -118,6 +118,8 @@ async function onChange(event: Event)
 </div>
 
 <style lang="scss">
+@reference "tailwindcss/theme";
+
 .btn {
 	@apply
 		bg-gray-400

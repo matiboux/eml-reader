@@ -358,6 +358,8 @@ function getHtml(emlData: Record<string, any>): string
 </div>
 
 <style lang="scss">
+@reference "tailwindcss/theme";
+
 .wrapper {
 	@apply
 		relative

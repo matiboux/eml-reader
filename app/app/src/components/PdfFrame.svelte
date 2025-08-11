@@ -334,6 +334,8 @@ async function closePdfFrame()
 </div>
 
 <style lang="scss">
+@reference "tailwindcss/theme";
+
 .wrapper
 {
 	@apply
