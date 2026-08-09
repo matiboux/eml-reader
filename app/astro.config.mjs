@@ -16,9 +16,17 @@ export default defineConfig({
 		svelte(),
 	],
 	vite: {
+		resolve: {
+			alias: {
+				'~': '/src',
+			},
+		},
 		plugins: [
 			tailwindcss(),
 			nodePolyfills({
+				// Avoid polyfilling `node:`-prefixed imports, which clashes with
+				// Rolldown's own internal runtime (e.g. `node:module`'s createRequire)
+				protocolImports: false,
 				// Node.js global to browser globalThis
 				globals: {
 					Buffer: true,
