@@ -16,7 +16,7 @@
     "astro:preview": "astro preview",
     "test:vitest": "vitest run",
     "test:playwright": "playwright test",
-    "deps:update": "pnpx npm-check-updates -t semver -u && pnpm i"
+    "npm:lockfile": "npm install --package-lock-only --ignore-scripts"
   },
   "repository": {
     "type": "git",
@@ -27,27 +27,31 @@
   },
   "homepage": "https://github.com/matiboux/eml-reader#readme",
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/svelte": "^7.2.0",
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/svelte": "^7.2.5",
     "@astrojs/tailwind": "^5.1.5",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/twemoji": "^1.2.4",
-    "@iconify/tailwind4": "^1.0.6",
-    "@tailwindcss/vite": "^4.1.14",
-    "astro": "^6.1.10",
+    "@iconify-json/twemoji": "^1.2.5",
+    "@iconify/tailwind4": "^1.2.3",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.0",
     "bytes": "^3.1.2",
     "eml-parse-js": "^1.1.15",
     "nanostores": "^0.11.4",
     "pdfjs-dist": "^4.10.38",
-    "sass": "^1.93.2",
-    "svelte": "^5.39.11",
-    "tailwindcss": "^4.1.14",
-    "typescript": "^5.9.3"
+    "sass": "^1.102.0",
+    "svelte": "^5.56.8",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.0",
-    "@types/node": "^22.18.10",
-    "vitest": "^3.2.4"
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^24.13.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  },
+  "imports": {
+    "#global.css": "./src/styles/global.css",
+    "#tailwind.css": "./src/styles/tailwind.css"
   }
 }
