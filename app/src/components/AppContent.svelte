@@ -720,7 +720,7 @@ function getHtml(emlData: Record<string, any>): string
 	}
 }
 
-@import "~/styles/style.scss";
+@use "~/styles/style.scss";
 
 span[class^="icon-"], span[class*=" icon-"] {
 	@extend .align-icon-inline;
