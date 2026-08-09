@@ -1,7 +1,7 @@
 import { defineConfig, envField } from 'astro/config'
 import svelte from '@astrojs/svelte'
 import tailwindcss from '@tailwindcss/vite'
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 import { i18n } from '/src/config'
 
@@ -18,21 +18,14 @@ export default defineConfig({
 	vite: {
 		plugins: [
 			tailwindcss(),
-		],
-		optimizeDeps: {
-			esbuildOptions: {
+			nodePolyfills({
 				// Node.js global to browser globalThis
-				define: {
-					global: 'globalThis',
+				globals: {
+					Buffer: true,
+					global: true,
 				},
-				// Enable esbuild polyfill plugins
-				plugins: [
-					NodeGlobalsPolyfillPlugin({
-						buffer: true,
-					}),
-				],
-			},
-		},
+			}),
+		],
 	},
 	i18n: i18n,
 	env: {
