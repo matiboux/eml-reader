@@ -28,7 +28,7 @@
   "homepage": "https://github.com/matiboux/eml-reader#readme",
   "dependencies": {
     "@astrojs/check": "^0.9.10",
-    "@astrojs/svelte": "^7.2.0",
+    "@astrojs/svelte": "^7.2.5",
     "@astrojs/tailwind": "^5.1.5",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@iconify-json/mdi": "^1.2.3",
@@ -41,7 +41,7 @@
     "nanostores": "^0.11.4",
     "pdfjs-dist": "^4.10.38",
     "sass": "^1.102.0",
-    "svelte": "^5.39.11",
+    "svelte": "^5.56.8",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
