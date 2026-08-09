@@ -358,6 +358,7 @@ function getHtml(emlData: Record<string, any>): string
 </div>
 
 <style lang="scss">
+@use "~/styles/style.scss";
 @reference "tailwindcss/theme";
 
 .wrapper {
@@ -719,8 +720,6 @@ function getHtml(emlData: Record<string, any>): string
 		}
 	}
 }
-
-@use "~/styles/style.scss";
 
 span[class^="icon-"], span[class*=" icon-"] {
 	@extend .align-icon-inline;
