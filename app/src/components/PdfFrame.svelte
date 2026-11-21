@@ -52,13 +52,12 @@ async function handlePage(page: any)
 	var viewport = page.getViewport({ scale: scale })
 
 	// Prepare canvas using PDF page dimensions
-	var context = pdfCanvas.getContext('2d')
 	pdfCanvas.height = viewport.height
 	pdfCanvas.width = viewport.width
 
-	// Render PDF page into canvas context
+	// Render PDF page into the canvas
 	var renderContext = {
-		canvasContext: context,
+		canvas: pdfCanvas,
 		viewport: viewport
 	}
 	var renderTask = page.render(renderContext)
@@ -73,16 +72,15 @@ async function handlePage(page: any)
 			// Prepare text layer
 			textLayer.innerHTML = ''
 
-			// Set --scale-factor to the PDF scale
-			textLayer.style.setProperty('--scale-factor', scale!.toString())
+			// Set --total-scale-factor to the PDF scale
+			textLayer.style.setProperty('--total-scale-factor', scale!.toString())
 
 			const PdfJS = await import('pdfjs-dist')
-			PdfJS.renderTextLayer({
+			await new PdfJS.TextLayer({
 				textContentSource: textContent,
 				container: textLayer,
 				viewport: viewport,
-				textDivs: [],
-			})
+			}).render()
 		})
 }
 

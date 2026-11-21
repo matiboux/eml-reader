@@ -1,0 +1,32 @@
+From: fixture@example.com
+To: reader@example.com
+Subject: PDF attachment fixture
+Date: Mon, 08 Sep 2026 09:00:00 +0000
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="fixture-boundary"
+
+--fixture-boundary
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+Fixture for test/e2e/pdf-attachment.test.ts. The attached one-page PDF is
+hand-built and uncompressed: a filled blue rectangle plus the Helvetica
+text run "eml test pdf" that the pdf.js text layer must expose.
+
+--fixture-boundary
+Content-Type: application/pdf; name="fixture.pdf"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="fixture.pdf"
+
+JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2Jq
+CjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2Jq
+CjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAyMDAg
+MTAwXSAvUmVzb3VyY2VzIDw8IC9Gb250IDw8IC9GMSA0IDAgUiA+PiA+PiAvQ29udGVudHMgNSAw
+IFIgPj4KZW5kb2JqCjQgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1R5cGUxIC9CYXNl
+Rm9udCAvSGVsdmV0aWNhID4+CmVuZG9iago1IDAgb2JqCjw8IC9MZW5ndGggNzAgPj4Kc3RyZWFt
+CjAgMCAxIHJnIDIwIDYwIDE2MCAzMCByZSBmCkJUIC9GMSAxOCBUZiAyMCAzMCBUZCAoZW1sIHRl
+c3QgcGRmKSBUaiBFVAplbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUg
+ZiAKMDAwMDAwMDAwOSAwMDAwMCBuIAowMDAwMDAwMDU4IDAwMDAwIG4gCjAwMDAwMDAxMTUgMDAw
+MDAgbiAKMDAwMDAwMDI0MSAwMDAwMCBuIAowMDAwMDAwMzExIDAwMDAwIG4gCnRyYWlsZXIKPDwg
+L1NpemUgNiAvUm9vdCAxIDAgUiA+PgpzdGFydHhyZWYKNDMwCiUlRU9GCg==
+--fixture-boundary--
