@@ -80,7 +80,12 @@ function getAttachmentName(attachment: any): string
 
 function getPlainText(emlData: Record<string, any>): string
 {
-	return `<pre>${emlData.text}</pre>`
+	// Escape the text: it must be displayed as is, never parsed as markup
+	const text = String(emlData.text ?? '')
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+	return `<pre>${text}</pre>`
 }
 
 // Detects markup that would reach the network when rendered
