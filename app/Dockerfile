@@ -277,11 +277,11 @@ RUN pnpm exec playwright install --with-deps
 # Copy dev source code
 COPY --from=source_dev --link --chown="${UID}:0" /app/ ./
 
-# Run as non-root user, including the build, so files it creates
-# (dist/, node_modules/.vite-temp/) stay writable when the tests rebuild
+# Run as non-root user
 USER ${UID}:0
 
 # Build application
+# It produces build artifacts owned by the non-root user
 RUN pnpm run build-only
 
 CMD [ "sh", "-c", "pnpm run test:playwright --output /tmp/playwright/test-results" ]
@@ -343,7 +343,7 @@ ARG UID
 # Set runtime environment
 ENV APP_ENV=prod
 
-# Apply Alpine security updates not yet in the upstream nginx image
+# Update Alpine packages for security
 RUN apk upgrade --no-cache
 
 # Copy nginx configuration
