@@ -73,6 +73,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # SECURITY: don't leave the GITHUB_TOKEN in .git/config for later steps.
+          persist-credentials: false
 
       # Execution steps
 
@@ -149,6 +152,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # SECURITY: don't leave the GITHUB_TOKEN in .git/config for later steps.
+          persist-credentials: false
 
       # Execution steps
 
@@ -275,6 +281,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # SECURITY: don't leave the GITHUB_TOKEN in .git/config for later steps.
+          persist-credentials: false
 
       # Execution steps
 
@@ -401,6 +410,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # SECURITY: don't leave the GITHUB_TOKEN in .git/config for later steps.
+          persist-credentials: false
 
       - name: Install pnpm
         run: npm install -g pnpm@12
@@ -435,6 +447,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # SECURITY: don't leave the GITHUB_TOKEN in .git/config for later steps.
+          persist-credentials: false
 
       # Execution steps
 
@@ -462,6 +477,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # SECURITY: don't leave the GITHUB_TOKEN in .git/config for later steps.
+          persist-credentials: false
 
       - name: Install pnpm
         run: npm install -g pnpm@12
@@ -495,6 +513,8 @@ jobs:
         with:
           # Full history is needed to scan past commits
           fetch-depth: 0
+          # SECURITY: don't leave the GITHUB_TOKEN in .git/config for later steps.
+          persist-credentials: false
 
       # Execution steps
 
