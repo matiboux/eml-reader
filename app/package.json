@@ -37,11 +37,11 @@
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.4.13",
     "bytes": "^3.1.2",
-    "postal-mime": "^4.2.1",
     "nanostores": "^0.11.4",
     "pdfjs-dist": "^6.5.438",
+    "postal-mime": "^4.2.1",
     "sass": "^1.108.2",
-    "svelte": "^5.58.0",
+    "svelte": "^5.59.1",
     "tailwindcss": "^4.3.5",
     "vite-plugin-node-polyfills": "^0.28.0"
   },
