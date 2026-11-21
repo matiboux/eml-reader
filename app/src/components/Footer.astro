@@ -20,42 +20,42 @@ const buildVersion = githubSha ? githubSha.slice(0, 7) : 'dev'
 >
 	<div>
 		<h3>
-			<span class="icon-[mdi--code-braces] icon-align"></span>
+			<span class="icon-[mdi--code-braces] icon-align"></span> {' '}
 			{_('Open source project')}
 		</h3>
 		<p>
-			<span class="icon-[mdi--github] icon-align"></span>
-			{_('See the source code on')}
-			<a href={githubRepositoryUrl ?? '#'}>GitHub</a>
+			<span class="icon-[mdi--github] icon-align"></span> {' '}
+			{_('See the source code on')} {' '}
+			<a href={githubRepositoryUrl ?? '#'}>GitHub</a> {' '}
 			<small>(v. {buildVersion})</small>
 		</p>
 		<p>
-			<span class="icon-[mdi--fire] icon-align"></span>
-			{_('Built with')}
-			<a href="https://astro.build/">Astro</a>,
-			{_('served by')}
+			<span class="icon-[mdi--fire] icon-align"></span> {' '}
+			{_('Built with')} {' '}
+			<a href="https://astro.build/">Astro</a>, {' '}
+			{_('served by')} {' '}
 			<a href="https://pages.github.com/">GitHub Pages</a>
 		</p>
 		<p>
-			<span class="icon-[mdi--heart] icon-align text-red-500"></span>
-			{_('Made with love by')}
+			<span class="icon-[mdi--heart] icon-align text-red-500"></span> {' '}
+			{_('Made with love by')} {' '}
 			<a href="https://matiboux.me/">Matiboux</a>
 		</p>
 	</div>
 
 	<div>
 		<h3>
-			<span class="icon-[mdi--security-lock] icon-align"></span>
+			<span class="icon-[mdi--security-lock] icon-align"></span> {' '}
 			{_('Data privacy')}
 		</h3>
 		<p>
-			<span class="icon-[mdi--server-network-off] icon-align"></span>
-			{_('No data is collected or processed over the network or on any server.')}
-			{_('All data is processed locally in your browser, and stays on your own device.')}
+			<span class="icon-[mdi--server-network-off] icon-align"></span> {' '}
+			{_('No data is collected or processed over the network or on any server.')} {' '}
+			{_('All data is processed locally in your browser, and stays on your own device.')} {' '}
 		</p>
 		<p>
-			<span class="icon-[mdi--cookie-off] icon-align"></span>
-			{_('This website uses no cookies and does no tracking.')}
+			<span class="icon-[mdi--cookie-off] icon-align"></span> {' '}
+			{_('This website uses no cookies and does no tracking.')} {' '}
 		</p>
 	</div>
 </footer>
