@@ -342,6 +342,9 @@ ARG UID
 # Set runtime environment
 ENV APP_ENV=prod
 
+# Apply Alpine security updates not yet in the upstream nginx image
+RUN apk upgrade --no-cache
+
 # Copy nginx configuration
 COPY --link ./nginx/default.conf.template /etc/nginx/templates/
 
