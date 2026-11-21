@@ -1,5 +1,5 @@
 <script lang="ts">
-import { unquoteString } from 'eml-parse-js'
+import { unquoteString } from '~/lib/parseEml'
 
 import type { Locales } from '~/i18n/type.d.ts'
 import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
@@ -98,7 +98,7 @@ function getAttachmentContentType(attachment: any): string | null
 			<br />
 			{$emlData?.attachments?.[$openedAttachmentIndex]?.name} <br />
 			{$emlData?.attachments?.[$openedAttachmentIndex]?.contentType} <br />
-			{$emlData?.attachments?.[$openedAttachmentIndex]?.data64 && bytes($emlData.attachments?.[$openedAttachmentIndex]?.data64.length)}
+			{$emlData?.attachments?.[$openedAttachmentIndex]?.data64 && bytes($emlData.attachments?.[$openedAttachmentIndex]?.size)}
 		{/if}
 	</div> -->
 

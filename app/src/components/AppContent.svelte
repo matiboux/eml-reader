@@ -1,5 +1,5 @@
 <script lang="ts">
-import { unquoteString } from 'eml-parse-js'
+import { unquoteString } from '~/lib/parseEml'
 import bytes from 'bytes'
 
 import type { Locales } from '~/i18n/type.d.ts'
@@ -249,7 +249,7 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 										{/if}
 									</div>
 									<div class="right">
-										<div><b>{getAttachmentName(attachment)}</b> ({bytes.format(attachment.data.length)})</div>
+										<div><b>{getAttachmentName(attachment)}</b> ({bytes.format(attachment.size)})</div>
 									</div>
 								</button>
 							</li>

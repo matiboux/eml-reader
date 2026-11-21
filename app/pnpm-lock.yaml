@@ -39,15 +39,15 @@ importers:
       bytes:
         specifier: ^3.1.2
         version: 3.1.2
-      eml-parse-js:
-        specifier: ^1.1.15
-        version: 1.1.15
       nanostores:
         specifier: ^0.11.4
         version: 0.11.4
       pdfjs-dist:
         specifier: ^6.5.438
         version: 6.5.438
+      postal-mime:
+        specifier: ^4.2.1
+        version: 4.2.1
       sass:
         specifier: ^1.108.2
         version: 1.108.2
@@ -1071,12 +1071,6 @@ packages:
   '@shikijs/vscode-textmate@10.1.0':
     resolution: {integrity: sha512-cVBuhDQjBZaNMTwBquYfPydrUP+E3hE6oYGasx8h6ZrODIM7/r+gxLDXdd66oszbrggZHEntdE6j+5gYIVyMWQ==}
 
-  '@sinonjs/text-encoding@0.7.3':
-    resolution: {integrity: sha512-DE427ROAphMQzU4ENbliGYrBSYPXF+TtLg9S8vzeA+OF4ZKzoDdzfL8sxuMUGS/lgRhM6j1URSk9ghf7Xo1tyA==}
-    deprecated: |-
-      Deprecated: no longer maintained and no longer used by Sinon packages. See
-        https://github.com/sinonjs/nise/issues/243 for replacement details.
-
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
@@ -1629,9 +1623,6 @@ packages:
   elliptic@6.6.1:
     resolution: {integrity: sha512-RaddvvMatK2LJHqFJ+YA4WysVN5Ita9E35botqIYspQ4TkRAlCicdzKOjlyv/1Za5RyTNn7di//eEV0uTAfe3g==}
 
-  eml-parse-js@1.1.15:
-    resolution: {integrity: sha512-HOhS1y6dVvBHwqdqydJULRhNrwIYoWDOWYZVkvi8U5ByLfyb1eeGi9fTPfYuP9ooQUVwh42fTmCCHbOkd4lGSA==}
-
   emmet@2.4.11:
     resolution: {integrity: sha512-23QPJB3moh/U9sT4rQzGgeyyGIrcM+GH5uVYg2C6wZIxAIJq7Ng3QLT79tl8FUwDXhyq9SusfknOrofAKqvgyQ==}
 
@@ -1919,9 +1910,6 @@ packages:
   jiti@2.7.0:
     resolution: {integrity: sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==}
     hasBin: true
-
-  js-base64@3.9.7:
-    resolution: {integrity: sha512-UT2XYOCbXOXYoymbytretRDFnb6E6vYPqC1blehA/alnG6vRC0mNTQ6ijXYAPtiCG9o1FDNJXJvQtCwbChFDRQ==}
 
   json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
@@ -2244,6 +2232,10 @@ packages:
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
+
+  postal-mime@4.2.1:
+    resolution: {integrity: sha512-uFQnu6TPJe5IGzj3ZIjzAYCk7qnVYM3KFvo0JpRFftJKtxJcUSMgTaWsIXDakTKfN71fUULhjNNVbNonim5f0Q==}
+    engines: {node: '>=20'}
 
   postcss-load-config@4.0.2:
     resolution: {integrity: sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ==}
@@ -3802,8 +3794,6 @@ snapshots:
 
   '@shikijs/vscode-textmate@10.1.0': {}
 
-  '@sinonjs/text-encoding@0.7.3': {}
-
   '@standard-schema/spec@1.1.0': {}
 
   '@sveltejs/acorn-typescript@1.0.13(acorn@8.19.0)':
@@ -4474,11 +4464,6 @@ snapshots:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
 
-  eml-parse-js@1.1.15:
-    dependencies:
-      '@sinonjs/text-encoding': 0.7.3
-      js-base64: 3.9.7
-
   emmet@2.4.11:
     dependencies:
       '@emmetio/abbreviation': 2.3.3
@@ -4755,8 +4740,6 @@ snapshots:
   isomorphic-timers-promises@1.0.1: {}
 
   jiti@2.7.0: {}
-
-  js-base64@3.9.7: {}
 
   json-schema-traverse@1.0.0: {}
 
@@ -5056,6 +5039,8 @@ snapshots:
       playwright-core: 1.65.1
 
   possible-typed-array-names@1.1.0: {}
+
+  postal-mime@4.2.1: {}
 
   postcss-load-config@4.0.2(postcss@8.5.33):
     dependencies:

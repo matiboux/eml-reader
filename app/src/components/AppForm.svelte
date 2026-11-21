@@ -1,8 +1,7 @@
 <script lang="ts">
-import { readEml } from 'eml-parse-js'
-
 import type { Locales } from '~/i18n/type.d.ts'
 import { i18nFactory } from '~/i18n'
+import { parseEml } from '~/lib/parseEml'
 import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
 
@@ -29,47 +28,23 @@ async function onChange(event: Event)
 		return
 	}
 
-	const reader = new FileReader()
-	reader.onload = async () =>
+	openedAttachmentIndex.set(null)
+
+	try
 	{
-		const content = reader.result as string
-
-		readEml(
-			content,
-			(error, data) =>
-			{
-				target.value = ''
-
-				if (error)
-				{
-					emlError = error
-					openedAttachmentIndex.set(null)
-					emlData.set(null)
-					return
-				}
-
-				if (
-					Object.keys(data.headers).length <= 0 ||
-					(
-						!data.headers.hasOwnProperty('Content-Type') &&
-						data.headers.hasOwnProperty('')
-					)
-				)
-				{
-					emlError = 'Invalid EML file'
-					openedAttachmentIndex.set(null)
-					emlData.set(null)
-					return
-				}
-
-				emlError = null
-				openedAttachmentIndex.set(null)
-				emlData.set(data)
-				console.log(error, data)
-			}
-		)
+		const data = await parseEml(await file.arrayBuffer())
+		emlError = null
+		emlData.set(data)
 	}
-	reader.readAsText(file)
+	catch (error)
+	{
+		emlError = error instanceof Error ? error.message : error
+		emlData.set(null)
+	}
+	finally
+	{
+		target.value = ''
+	}
 }
 </script>
 
