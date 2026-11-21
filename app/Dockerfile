@@ -277,11 +277,12 @@ RUN pnpm exec playwright install --with-deps
 # Copy dev source code
 COPY --from=source_dev --link --chown="${UID}:0" /app/ ./
 
-# Build application
-RUN pnpm run build-only
-
 # Run as non-root user
 USER ${UID}:0
+
+# Build application
+# It produces build artifacts owned by the non-root user
+RUN pnpm run build-only
 
 CMD [ "sh", "-c", "pnpm run test:playwright --output /tmp/playwright/test-results" ]
 
@@ -341,6 +342,9 @@ ARG UID
 
 # Set runtime environment
 ENV APP_ENV=prod
+
+# Update Alpine packages for security
+RUN apk upgrade --no-cache
 
 # Copy nginx configuration
 COPY --link ./nginx/default.conf.template /etc/nginx/templates/
