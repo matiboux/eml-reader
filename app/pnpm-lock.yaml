@@ -16,7 +16,7 @@ importers:
         specifier: ^0.9.12
         version: 0.9.12(prettier@3.10.1)(typescript@5.9.3)
       '@astrojs/svelte':
-        specifier: ^9.0.1
+        specifier: ^9.1.6
         version: 9.1.6(@types/node@24.19.2)(astro@7.4.13(@types/node@24.19.2)(jiti@2.7.0)(sass@1.108.2)(yaml@2.9.1))(jiti@2.7.0)(sass@1.108.2)(svelte@5.58.0)(typescript@5.9.3)(yaml@2.9.1)
       '@astrojs/tailwind':
         specifier: ^5.1.5
@@ -52,7 +52,7 @@ importers:
         specifier: ^1.108.2
         version: 1.108.2
       svelte:
-        specifier: ^5.56.8
+        specifier: ^5.58.0
         version: 5.58.0
       tailwindcss:
         specifier: ^4.3.5
