@@ -37,7 +37,7 @@
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.4.13",
     "bytes": "^3.1.2",
-    "eml-parse-js": "^1.1.15",
+    "postal-mime": "^4.2.1",
     "nanostores": "^0.11.4",
     "pdfjs-dist": "^6.5.438",
     "sass": "^1.108.2",
