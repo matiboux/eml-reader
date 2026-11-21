@@ -4,6 +4,7 @@ import type { Locales } from '~/i18n/type.d.ts'
 import Layout from '~/layouts/Layout.astro'
 import AppModal from '~/components/AppModal.svelte'
 import LocaleSwitch from '~/components/LocaleSwitch.astro'
+import HiddenWhenLoaded from '~/components/HiddenWhenLoaded.svelte'
 import AppForm from '~/components/AppForm.svelte'
 import AppContent from '~/components/AppContent.svelte'
 import Footer from '~/components/Footer.astro'
@@ -18,25 +19,27 @@ const _ = i18nFactory(Astro.currentLocale as Locales | undefined)
 
 	<AppModal locale={Astro.currentLocale as Locales | undefined} client:load />
 
-	<div class="flex flex-col justify-center items-center min-h-full overflow-y gap-8 p-8 w-full max-w-[calc(1000px+2*2rem)] mx-auto">
-		<div class="bg-white shadow-lg rounded-lg p-6 w-full space-y-4">
-			<div class="flex items-start justify-between">
-				<h1 class="text-4xl font-bold">
-					<span class="icon-[mdi--email-search] align-icon-inline"></span>
-					{site.title}
-				</h1>
-				<LocaleSwitch />
+	<div class="flex flex-col justify-center items-center min-h-full overflow-y gap-8 p-8 pt-4 w-full max-w-[calc(1000px+2*2rem)] mx-auto">
+		<HiddenWhenLoaded class="w-full" client:load>
+			<div class="bg-white shadow-lg rounded-lg p-6 w-full space-y-4">
+				<div class="flex items-start justify-between">
+					<h1 class="text-4xl font-bold">
+						<span class="icon-[mdi--email-search] align-icon-inline"></span> {' '}
+						{site.title}
+					</h1>
+					<LocaleSwitch />
+				</div>
+				{site.description &&
+					<p class="text-gray-600">
+						{_(site.description)}
+					</p>
+				}
+
+				<AppForm class="home text-black group-hover:text-gray mt-4" locale={Astro.currentLocale as Locales | undefined} client:load />
 			</div>
-			{site.description &&
-				<p class="text-gray-600">
-					{_(site.description)}
-				</p>
-			}
+		</HiddenWhenLoaded>
 
-			<AppForm class="home text-black group-hover:text-gray mt-4" locale={Astro.currentLocale as Locales | undefined} client:load />
-		</div>
-
-		<AppContent locale={Astro.currentLocale as Locales | undefined} client:load />
+		<AppContent title={site.title} locale={Astro.currentLocale as Locales | undefined} client:load />
 
 		<Footer class="w-full" />
 	</div>
