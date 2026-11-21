@@ -89,7 +89,7 @@ function getHtml(emlData: Record<string, any>): string
 	let html = emlData.html
 
 	// Add base target to the HTML
-	html = html.replace(/<head>/, '<head><base target="_parent">')
+	html = html.replace(/<head>/, '<head><base target="_blank">')
 
 	const cidRegex = /\ssrc="cid:([^"]+)"/g
 	let match: RegExpExecArray | null
@@ -345,8 +345,14 @@ function getHtml(emlData: Record<string, any>): string
 					<!-- Body block -->
 					{#if $emlData.html || $emlData.text}
 						<div class="email-frame">
+							<!-- Security: Sandboxed iframe. Links may only open in a new tab, and the
+							opened page is not sandboxed. Never add allow-scripts or allow-same-origin:
+							e-mail bodies are untrusted input. -->
 							<iframe
 								class="w-full h-full"
+								sandbox="allow-popups allow-popups-to-escape-sandbox"
+								referrerpolicy="no-referrer"
+								title={_({ en: 'E-mail body', fr: 'Corps de l\'e-mail' })}
 								srcdoc={showHtml ? getHtml($emlData) : getPlainText($emlData)}
 							></iframe>
 						</div>
