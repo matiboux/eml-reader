@@ -60,17 +60,15 @@ async function onChange(event: Event)
 	<div class="grid grid-cols-2 gap-4">
 		<!-- Input type -->
 		<div class="space-y-4 col-span-2 sm:col-auto">
-			<div class="block space-y-2">
-				<span class="text-gray-700">
-					{_({
-						'en': 'File',
-						'fr': 'Fichier',
-					})}
-				</span>
+			<div class="flex items-center gap-4">
 				<input
 					type="file"
 					class="form-input"
 					accept="message/rfc822"
+					aria-label={_({
+						'en': 'File',
+						'fr': 'Fichier',
+					})}
 					on:change={onChange}
 				/>
 			</div>
@@ -115,6 +113,26 @@ async function onChange(event: Event)
 			disabled:bg-blue-300
 			;
 	}
+}
+
+// File input: a simple button with the file name beside it
+.form-input {
+	@apply
+		min-w-0
+		text-sm
+		text-gray-600
+		cursor-pointer
+		file:mr-2
+		file:px-2
+		file:py-1
+		file:border-0
+		file:rounded-md
+		file:bg-blue-500
+		hover:file:bg-blue-600
+		file:text-white
+		file:font-semibold
+		file:cursor-pointer
+		;
 }
 
 textarea {
