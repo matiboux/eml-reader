@@ -23,9 +23,13 @@ type MenuOption = 'headers' | 'body' | 'attachments'
 
 let menuSelected: MenuOption = 'body'
 let showHtml: boolean = true
+// Remote content (images, stylesheets, fonts) is blocked until the user allows it
+let allowRemote: boolean = false
 
 emlData.subscribe(data =>
 {
+	allowRemote = false
+
 	if (!data)
 	{
 		return
@@ -79,7 +83,23 @@ function getPlainText(emlData: Record<string, any>): string
 	return `<pre>${emlData.text}</pre>`
 }
 
-function getHtml(emlData: Record<string, any>): string
+// Detects markup that would reach the network when rendered
+const REMOTE_PATTERN = /(?:src|background|href)\s*=\s*["']?\s*(?:https?:)?\/\/|url\(\s*["']?\s*(?:https?:)?\/\//i
+
+function hasRemoteContent(emlData: Record<string, any>): boolean
+{
+	return Boolean(emlData.html) && REMOTE_PATTERN.test(emlData.html)
+}
+
+// Content-Security-Policy for the e-mail body: network content is blocked unless allowed
+function getCspMeta(allowRemote: boolean): string
+{
+	const net = allowRemote ? ' http: https:' : ''
+	const csp = `default-src 'none'; style-src 'unsafe-inline'${net}; img-src data:${net}; font-src data:${net}`
+	return `<meta http-equiv="Content-Security-Policy" content="${csp}">`
+}
+
+function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 {
 	if (!emlData.html)
 	{
@@ -88,8 +108,20 @@ function getHtml(emlData: Record<string, any>): string
 
 	let html = emlData.html
 
-	// Add base target to the HTML
-	html = html.replace(/<head>/, '<head><base target="_blank">')
+	// Add the content security policy and the base target to the HTML
+	const head = `${getCspMeta(allowRemote)}<base target="_blank">`
+	if (/<head[^>]*>/i.test(html))
+	{
+		html = html.replace(/<head([^>]*)>/i, `<head$1>${head}`)
+	}
+	else if (/<html[^>]*>/i.test(html))
+	{
+		html = html.replace(/<html([^>]*)>/i, `<html$1><head>${head}</head>`)
+	}
+	else
+	{
+		html = `<!doctype html><html><head>${head}</head><body>${html}</body></html>`
+	}
 
 	const cidRegex = /\ssrc="cid:([^"]+)"/g
 	let match: RegExpExecArray | null
@@ -345,6 +377,25 @@ function getHtml(emlData: Record<string, any>): string
 					<!-- Body block -->
 					{#if $emlData.html || $emlData.text}
 						<div class="email-frame">
+							{#if showHtml && !allowRemote && hasRemoteContent($emlData)}
+								<div class="remote-notice">
+									<span>
+										{_({
+											en: 'Remote images and content are blocked.',
+											fr: 'Les images et contenus distants sont bloqués.',
+										})}
+									</span>
+									<button
+										type="button"
+										on:click={() => { allowRemote = true }}
+									>
+										{_({
+											en: 'Load remote content',
+											fr: 'Charger le contenu distant',
+										})}
+									</button>
+								</div>
+							{/if}
 							<!-- Security: Sandboxed iframe. Links may only open in a new tab, and the
 							opened page is not sandboxed. Never add allow-scripts or allow-same-origin:
 							e-mail bodies are untrusted input. -->
@@ -353,7 +404,7 @@ function getHtml(emlData: Record<string, any>): string
 								sandbox="allow-popups allow-popups-to-escape-sandbox"
 								referrerpolicy="no-referrer"
 								title={_({ en: 'E-mail body', fr: 'Corps de l\'e-mail' })}
-								srcdoc={showHtml ? getHtml($emlData) : getPlainText($emlData)}
+								srcdoc={showHtml ? getHtml($emlData, allowRemote) : getPlainText($emlData)}
 							></iframe>
 						</div>
 					{/if}
@@ -656,14 +707,42 @@ function getHtml(emlData: Record<string, any>): string
 		.email-frame {
 			@apply
 				grow
+				flex
+				flex-col
+				min-h-0
 				border-t
 				border-gray-200
 				;
 
+			.remote-notice {
+				@apply
+					flex
+					flex-wrap
+					items-center
+					justify-between
+					gap-2
+					px-3
+					py-2
+					text-sm
+					bg-yellow-50
+					text-gray-800
+					border-b
+					border-gray-200
+					;
+
+				button {
+					@apply
+						cursor-pointer
+						underline
+						;
+				}
+			}
+
 			iframe {
 				@apply
 					w-full
-					h-full
+					flex-1
+					min-h-0
 					;
 			}
 		}
