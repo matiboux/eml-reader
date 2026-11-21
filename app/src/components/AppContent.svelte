@@ -123,16 +123,22 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 		html = `<!doctype html><html><head>${head}</head><body>${html}</body></html>`
 	}
 
-	const cidRegex = /\ssrc="cid:([^"]+)"/g
-	let match: RegExpExecArray | null
-	while ((match = cidRegex.exec(html)))
+	// Inline `cid:` images as data: URIs. Guard on `attachments`: an e-mail can
+	// reference a cid without an attachments array, and `.find` on `undefined`
+	// would throw and blank the whole body.
+	if (Array.isArray(emlData.attachments))
 	{
-		const cid = match[1]
-		const attachment = emlData.attachments.find((attachment: any) => attachment.id === `<${cid}>`)
-		if (attachment)
+		const cidRegex = /\ssrc="cid:([^"]+)"/g
+		let match: RegExpExecArray | null
+		while ((match = cidRegex.exec(html)))
 		{
-			const contentType = attachment.contentType.split(';')[0]
-			html = html.replace(new RegExp(`\\ssrc="cid:${cid}"`, 'g'), ` src="data:${contentType};base64,${attachment.data64}"`)
+			const cid = match[1]
+			const attachment = emlData.attachments.find((attachment: any) => attachment.id === `<${cid}>`)
+			if (attachment)
+			{
+				const contentType = attachment.contentType.split(';')[0]
+				html = html.replace(new RegExp(`\\ssrc="cid:${cid}"`, 'g'), ` src="data:${contentType};base64,${attachment.data64}"`)
+			}
 		}
 	}
 
