@@ -1,0 +1,36 @@
+name: Setup Node
+description: Install Node and pnpm, with the pnpm store cached, and optionally the app dependencies
+
+inputs:
+  install:
+    description: Install the app dependencies (frozen lockfile)
+    required: false
+    default: true
+  working-directory:
+    description: Directory of the Node project
+    required: false
+    default: app
+
+runs:
+  using: composite
+  steps:
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 12
+        package_json_file: ${{ inputs.working-directory }}/package.json
+
+    - name: Install Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+        # The pnpm store only exists once dependencies are installed
+        cache: ${{ inputs.install != 'false' && 'pnpm' || '' }}
+        cache-dependency-path: ${{ inputs.working-directory }}/pnpm-lock.yaml
+
+    - name: Install dependencies
+      if: inputs.install != 'false'
+      shell: sh
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm install --frozen-lockfile
