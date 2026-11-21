@@ -277,11 +277,12 @@ RUN pnpm exec playwright install --with-deps
 # Copy dev source code
 COPY --from=source_dev --link --chown="${UID}:0" /app/ ./
 
+# Run as non-root user, including the build, so files it creates
+# (dist/, node_modules/.vite-temp/) stay writable when the tests rebuild
+USER ${UID}:0
+
 # Build application
 RUN pnpm run build-only
-
-# Run as non-root user
-USER ${UID}:0
 
 CMD [ "sh", "-c", "pnpm run test:playwright --output /tmp/playwright/test-results" ]
 
