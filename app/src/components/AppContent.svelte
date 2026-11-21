@@ -345,8 +345,13 @@ function getHtml(emlData: Record<string, any>): string
 					<!-- Body block -->
 					{#if $emlData.html || $emlData.text}
 						<div class="email-frame">
+							<!-- Security: Sandboxed iframe with no capabilities.
+							Never add allow-scripts: e-mail bodies are untrusted input. -->
 							<iframe
 								class="w-full h-full"
+								sandbox=""
+								referrerpolicy="no-referrer"
+								title={_({ en: 'E-mail body', fr: 'Corps de l\'e-mail' })}
 								srcdoc={showHtml ? getHtml($emlData) : getPlainText($emlData)}
 							></iframe>
 						</div>
