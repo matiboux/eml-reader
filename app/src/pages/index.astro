@@ -39,7 +39,7 @@ const _ = i18nFactory(Astro.currentLocale as Locales | undefined)
 			</div>
 		</HiddenWhenLoaded>
 
-		<AppContent title={site.title} locale={Astro.currentLocale as Locales | undefined} client:load />
+		<AppContent title={site.title ? _(site.title) : undefined} locale={Astro.currentLocale as Locales | undefined} client:load />
 
 		<Footer class="w-full" />
 	</div>
