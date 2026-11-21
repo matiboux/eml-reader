@@ -6,15 +6,18 @@ import type { Locales } from '~/i18n/type.d.ts'
 import { i18nFactory } from '~/i18n'
 import openedAttachmentIndex from '~/stores/openedAttachmentIndex'
 import emlData from '~/stores/emlData'
+import EmailFields from './EmailFields.svelte'
 
 // Props
 let userClass: string | undefined = undefined
 let style: string | undefined = undefined
 let locale: Locales | undefined = undefined
+let title: string | undefined = undefined
 export {
 	userClass as class,
 	style,
 	locale,
+	title,
 }
 
 const _ = i18nFactory(locale)
@@ -45,22 +48,25 @@ emlData.subscribe(data =>
 	}
 })
 
+// Headers already shown as e-mail fields
+const FIELD_HEADERS = ['from', 'to', 'subject', 'date', 'message-id', 'delivered-to']
+$: otherHeaders = Object.entries<string>($emlData?.headers ?? {})
+	.filter(([key]) => !FIELD_HEADERS.includes(key.toLowerCase()))
+
+function handleBack(event: MouseEvent)
+{
+	event.preventDefault()
+	openedAttachmentIndex.set(null)
+	emlData.set(null)
+	menuSelected = 'body'
+	window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
 function handleMenuSelect(value: MenuOption)
 {
-	return (event: MouseEvent) =>
+	return () =>
 	{
-		// Set the menu selected
 		menuSelected = value
-
-		// Scroll down to the menu
-		const wrapper = (event.currentTarget as HTMLElement).closest<HTMLElement>('.wrapper')
-		if (wrapper)
-		{
-			window.scrollTo({
-				top: wrapper.offsetTop - 24,
-				behavior: 'smooth',
-			})
-		}
 	}
 }
 
@@ -161,265 +167,215 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 >
 	{#if $emlData}
 
-		<nav class="menu">
+		<div class="menu-bar">
 			<a
-				class={menuSelected === 'headers' ? 'active' : ''}
-				on:click={handleMenuSelect('headers')}
+				href="./"
+				class="back"
+				on:click={handleBack}
 			>
-				{_({
-					en: 'Headers',
-					fr: 'En-têtes',
-				})}
+				<h2>
+					<span class="icon icon-[mdi--chevron-left] align-icon-inline"></span>
+					{title}
+				</h2>
 			</a>
-			<a
-				class={menuSelected === 'body' ? 'active' : ''}
-				on:click={handleMenuSelect('body')}
-			>
-				{_({
-					en: 'Body',
-					fr: 'Corps',
-				})}
-			</a>
-			{#if $emlData.attachments}
+			<nav class="menu">
 				<a
-					class={menuSelected === 'attachments' ? 'active' : ''}
-					on:click={handleMenuSelect('attachments')}
+					class={menuSelected === 'headers' ? 'active' : ''}
+					on:click={handleMenuSelect('headers')}
 				>
 					{_({
-						en: 'Attachments',
-						fr: 'Pièces jointes',
+						en: 'Headers',
+						fr: 'En-têtes',
 					})}
-					<span class="badge">{$emlData.attachments.length}</span>
 				</a>
-			{/if}
-		</nav>
+				<a
+					class={menuSelected === 'body' ? 'active' : ''}
+					on:click={handleMenuSelect('body')}
+				>
+					{_({
+						en: 'Body',
+						fr: 'Corps',
+					})}
+				</a>
+				{#if $emlData.attachments}
+					<a
+						class={menuSelected === 'attachments' ? 'active' : ''}
+						on:click={handleMenuSelect('attachments')}
+					>
+						{_({
+							en: 'Attachments',
+							fr: 'Pièces jointes',
+						})}
+						<span class="badge">{$emlData.attachments.length}</span>
+					</a>
+				{/if}
+			</nav>
+		</div>
 
-		<div class="paper-main">
-			<div class="paper paper-back">
-			</div>
-
-			{#if $emlData.attachments}
-				<div class="paper paper-back paper-back-alt">
+		<div class="paper-column">
+			<div class="paper-main">
+				<div class="paper paper-back">
 				</div>
-			{/if}
 
-			<div class={`paper paper-front paper-${menuSelected}`}>
-				{#if menuSelected === 'headers'}
-					{#if $emlData.headers}
-						<ul class="list-styled">
-							{#each Object.entries($emlData.headers) as [key, value]}
-								<li>
-									<b>{key}:</b> {value}
-								</li>
-							{/each}
-						</ul>
-					{/if}
-
-				{:else if menuSelected === 'attachments' && $emlData.attachments}
-					<div class="message message-warning">
-						<span class="icon icon-[mdi--warning]"></span>
-						<span>
-							{_({
-								en: 'Careful! Make sure you trust the source before opening or downloading attachments.',
-								fr: 'Attention ! Assurez-vous de faire confiance en la source avant d\'ouvrir ou de télécharger les pièces jointes.',
-							})}
-						</span>
+				{#if $emlData.attachments}
+					<div class="paper paper-back paper-back-alt">
 					</div>
+				{/if}
 
-					<!-- Attachments block -->
-					<ul>
-						{#each $emlData.attachments as attachment, index}
-							<li>
-								<!-- <b>{attachment.name}</b> ({attachment.contentType}) -->
-								<button
-									class="attachment-btn"
-									on:click={handleAttachmentSelect(index)}
-								>
-									<div class="left">
-										{#if attachment.contentType.startsWith('image/')}
-											<span class="icon icon-[mdi--file-image]"></span>
-										{:else if attachment.contentType.startsWith('audio/')}
-											<span class="icon icon-[mdi--file-music]"></span>
-										{:else if attachment.contentType.startsWith('video/')}
-											<span class="icon icon-[mdi--file-video]"></span>
-										{:else if attachment.contentType.startsWith('application/pdf')}
-											<span class="icon icon-[mdi--file-pdf-box]"></span>
-										{:else}
-											<span class="icon icon-[mdi--file-download]"></span>
+				<div class="paper paper-front">
+					<div class={`paper-content paper-${menuSelected}`}>
+						{#if menuSelected === 'headers'}
+							<div class="email-header">
+								<EmailFields {locale} extended />
+							</div>
+
+							{#if otherHeaders.length > 0}
+								<div class="email-header email-header-other">
+									<EmailFields {locale} rows={otherHeaders} />
+								</div>
+							{/if}
+
+						{:else if menuSelected === 'attachments' && $emlData.attachments}
+							<div class="message message-warning">
+								<span class="icon icon-[mdi--warning]"></span>
+								<span>
+									{_({
+										en: 'Careful! Make sure you trust the source before opening or downloading attachments.',
+										fr: 'Attention ! Assurez-vous de faire confiance en la source avant d\'ouvrir ou de télécharger les pièces jointes.',
+									})}
+								</span>
+							</div>
+
+							<!-- Attachments block -->
+							<ul>
+								{#each $emlData.attachments as attachment, index}
+									<li>
+										<!-- <b>{attachment.name}</b> ({attachment.contentType}) -->
+										<button
+											class="attachment-btn"
+											on:click={handleAttachmentSelect(index)}
+										>
+											<div class="left">
+												{#if attachment.contentType.startsWith('image/')}
+													<span class="icon icon-[mdi--file-image]"></span>
+												{:else if attachment.contentType.startsWith('audio/')}
+													<span class="icon icon-[mdi--file-music]"></span>
+												{:else if attachment.contentType.startsWith('video/')}
+													<span class="icon icon-[mdi--file-video]"></span>
+												{:else if attachment.contentType.startsWith('application/pdf')}
+													<span class="icon icon-[mdi--file-pdf-box]"></span>
+												{:else}
+													<span class="icon icon-[mdi--file-download]"></span>
+												{/if}
+											</div>
+											<div class="right">
+												<div><b>{getAttachmentName(attachment)}</b> ({bytes.format(attachment.size)})</div>
+											</div>
+										</button>
+									</li>
+								{/each}
+							</ul>
+
+						{:else}
+							<div class="email-header">
+								<EmailFields {locale}>
+									{#if $emlData.attachments}
+										<div>
+											<div>
+												<span class="icon icon-[mdi--paperclip] align-icon-inline text-gray-600!"></span>
+												{$emlData.attachments.length}
+												{_({
+													en: $emlData.attachments.length > 1 ? 'attachments' : 'attachment',
+													fr: $emlData.attachments.length > 1 ? 'pièces jointes' : 'pièce jointe',
+												})}
+												–
+												<a
+													href="#attachments"
+													class="text-blue-600 underline hover:text-blue-800"
+													on:click|preventDefault={handleMenuSelect('attachments')}
+												>
+													{_({
+														en: 'See attachments',
+														fr: 'Voir les pièces jointes',
+													})}
+												</a>
+											</div>
+										</div>
+									{/if}
+								</EmailFields>
+								{#if ($emlData.html && $emlData.text) || $emlData.attachments}
+									<div class="right">
+										{#if $emlData.html && $emlData.text}
+											<label class="html-toggle">
+												<input
+													type="checkbox"
+													bind:checked={showHtml}
+												/>
+												<span class={`icon ${showHtml ? 'icon-[mdi--toggle-switch]' : 'icon-[mdi--toggle-switch-off-outline]'}`}></span>
+												<span>
+													HTML
+												</span>
+											</label>
+										{/if}
+										{#if $emlData.attachments}
+											<a
+												href="#attachments"
+												class="html-toggle"
+												on:click|preventDefault={handleMenuSelect('attachments')}
+											>
+												<span class="icon icon-[mdi--attachment]"></span>
+												<span class="sr-only">
+													{_({
+														en: 'Attachments',
+														fr: 'Pièces jointes',
+													})}
+												</span>
+												<span aria-hidden="true">
+													{$emlData.attachments.length}
+												</span>
+											</a>
 										{/if}
 									</div>
-									<div class="right">
-										<div><b>{getAttachmentName(attachment)}</b> ({bytes.format(attachment.size)})</div>
-									</div>
-								</button>
-							</li>
-						{/each}
-					</ul>
-
-				{:else}
-					<div class="email-header">
-						<div class="left">
-							<!-- From block -->
-							{#if $emlData.from}
-								<div>
-									<div class="email-header-key">
-										{_({
-											en: 'From:',
-											fr: 'De :',
-										})}
-									</div>
-									<div>
-										{$emlData.from.name ? `${$emlData.from.name} <${$emlData.from.email}>` : $emlData.from.email}
-									</div>
-								</div>
-							{/if}
-
-							<!-- To block -->
-							{#if $emlData.to}
-								<div>
-									<div class="email-header-key">
-										{_({
-											en: 'To:',
-											fr: 'À :',
-										})}
-									</div>
-									<div>
-										{@html
-											(Array.isArray($emlData.to)
-												? $emlData.to
-												: [$emlData.to]
-											)
-												.map(to =>
-													(text =>
-													{
-														const p = document.createElement('p')
-														p.textContent = text
-														const escapedHtml = p.innerHTML
-														p.remove()
-														return escapedHtml
-													})
-													(to.name ? `${to.name} <${to.email}>` : to.email)
-												)
-												.join(` <span>;</span> `)
-										}
-									</div>
-								</div>
-							{/if}
-
-							<!-- Subject block -->
-							{#if $emlData.subject}
-								<div>
-									<div class="email-header-key">
-										{_({
-											en: 'Subject:',
-											fr: 'Sujet :',
-										})}
-									</div>
-									<div>
-										{$emlData.subject}
-									</div>
-								</div>
-							{/if}
-
-							<!-- Date block -->
-							{#if $emlData.date}
-								<div>
-									<div class="email-header-key">
-										{_({
-											en: 'Date:',
-											fr: 'Date :',
-										})}
-									</div>
-									<div>
-										{$emlData.date.toLocaleString(locale)}
-									</div>
-								</div>
-							{/if}
-
-							{#if $emlData.attachments}
-								<div>
-									<div>
-										<span class="icon icon-[mdi--paperclip] align-icon-inline"></span>
-										{$emlData.attachments.length}
-										{_({
-											en: $emlData.attachments.length > 1 ? 'attachments' : 'attachment',
-											fr: $emlData.attachments.length > 1 ? 'pièces jointes' : 'pièce jointe',
-										})}
-										–
-										<button
-											class="text-blue-600 underline"
-											on:click={handleMenuSelect('attachments')}
-										>
-											{_({
-												en: 'See attachments',
-												fr: 'Voir les pièces jointes',
-											})}
-										</button>
-									</div>
-								</div>
-							{/if}
-						</div>
-						{#if $emlData.html && $emlData.text}
-							<div class="right">
-								<label class="html-toggle">
-									<input
-										type="checkbox"
-										bind:checked={showHtml}
-									/>
-									{#if showHtml}
-										<span class="icon icon-[mdi--toggle-switch]"></span>
-										<span>
-											HTML
-										</span>
-									{:else}
-										<span class="icon icon-[mdi--toggle-switch-off-outline]"></span>
-										<span>
-											{_({
-												en: 'Plain text',
-												fr: 'Texte brut',
-											})}
-										</span>
-									{/if}
-								</label>
+								{/if}
 							</div>
+
+							<!-- Body block -->
+							{#if $emlData.html || $emlData.text}
+								<div class="email-frame">
+									{#if showHtml && !allowRemote && hasRemoteContent($emlData)}
+										<div class="remote-notice">
+											<span>
+												{_({
+													en: 'Remote images and content are blocked.',
+													fr: 'Les images et contenus distants sont bloqués.',
+												})}
+											</span>
+											<button
+												type="button"
+												on:click={() => { allowRemote = true }}
+											>
+												{_({
+													en: 'Load remote content',
+													fr: 'Charger le contenu distant',
+												})}
+											</button>
+										</div>
+									{/if}
+									<!-- Security: Sandboxed iframe. Links may only open in a new tab, and the
+									opened page is not sandboxed. Never add allow-scripts or allow-same-origin:
+									e-mail bodies are untrusted input. -->
+									<iframe
+										class="w-full h-full"
+										sandbox="allow-popups allow-popups-to-escape-sandbox"
+										referrerpolicy="no-referrer"
+										title={_({ en: 'E-mail body', fr: 'Corps de l\'e-mail' })}
+										srcdoc={showHtml ? getHtml($emlData, allowRemote) : getPlainText($emlData)}
+									></iframe>
+								</div>
+							{/if}
 						{/if}
 					</div>
-
-					<!-- Body block -->
-					{#if $emlData.html || $emlData.text}
-						<div class="email-frame">
-							{#if showHtml && !allowRemote && hasRemoteContent($emlData)}
-								<div class="remote-notice">
-									<span>
-										{_({
-											en: 'Remote images and content are blocked.',
-											fr: 'Les images et contenus distants sont bloqués.',
-										})}
-									</span>
-									<button
-										type="button"
-										on:click={() => { allowRemote = true }}
-									>
-										{_({
-											en: 'Load remote content',
-											fr: 'Charger le contenu distant',
-										})}
-									</button>
-								</div>
-							{/if}
-							<!-- Security: Sandboxed iframe. Links may only open in a new tab, and the
-							opened page is not sandboxed. Never add allow-scripts or allow-same-origin:
-							e-mail bodies are untrusted input. -->
-							<iframe
-								class="w-full h-full"
-								sandbox="allow-popups allow-popups-to-escape-sandbox"
-								referrerpolicy="no-referrer"
-								title={_({ en: 'E-mail body', fr: 'Corps de l\'e-mail' })}
-								srcdoc={showHtml ? getHtml($emlData, allowRemote) : getPlainText($emlData)}
-							></iframe>
-						</div>
-					{/if}
-				{/if}
+				</div>
 			</div>
 		</div>
 	{/if}
@@ -437,8 +393,40 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 		flex-col
 		justify-center
 		gap-4
-		max-w-[calc(min(750px,_100%,_75vh_/_1.294))]
 		;
+
+	.paper-column {
+		@apply
+			w-full
+			mx-auto
+			max-w-[calc(min(750px,_100%,_max(75vh_/_1.294,_480px)))]
+			;
+	}
+
+	.menu-bar {
+		@apply
+			flex
+			flex-wrap
+			items-center
+			justify-start
+			gap-x-8
+			gap-y-2
+			;
+
+		.back {
+			@apply
+				text-gray-600
+				hover:text-gray-900
+				;
+
+			h2 {
+				@apply
+					text-xl
+					font-bold
+					;
+			}
+		}
+	}
 
 	.menu {
 		@apply
@@ -511,9 +499,17 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 
 		&.message-warning {
 			@apply
-				bg-orange-100
+				bg-transparent
+				items-start
 				text-orange-600
 				;
+
+			// Same icon size as the attachment buttons below, so icons and texts line up
+			.icon {
+				@apply
+					text-2xl
+					;
+			}
 		}
 
 		&.message-error {
@@ -530,16 +526,19 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 			bg-white
 			flex
 			flex-col
-			gap-4
 			w-full
 			mx-auto
-			p-6
-			overflow-y-auto
+			overflow-hidden
 			rounded-lg
 			shadow-lg
 			border
 			border-[#00000011]
 			;
+
+		// Minimum inset, so content never touches the paper borders:
+		// the content wrapper scrolls inside it, so overflow is hidden there
+		--paper-inset: 1px;
+		padding: var(--paper-inset);
 
 		aspect-ratio: 1 / 1.294;
 
@@ -548,15 +547,28 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 		}
 	}
 
+	.paper-content {
+		@apply
+			flex
+			flex-col
+			gap-4
+			grow
+			min-h-0
+			overflow-y-auto
+			;
+		padding: calc(1.5rem - var(--paper-inset));
+	}
+
 	.paper-main {
 		@apply
 			relative
-			my-[calc(max(1rem,_2.5vh))]
+			my-[calc(max(1.3rem,_2.5vh))]
 			;
 
 		.paper-back {
 			@apply
 				absolute
+				bg-gray-50
 				top-0
 				left-0
 				;
@@ -573,6 +585,9 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 		}
 
 		.paper-front {
+			@apply
+				shadow-xl
+				;
 			transition: margin-top 0.5s ease;
 		}
 
@@ -584,70 +599,35 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 		}
 	}
 
-	.paper-body {
+	.paper-headers {
 		@apply
-			p-0
+			gap-0
 			;
+
+		.email-header {
+			padding-bottom: calc(1rem - var(--paper-inset));
+		}
+	}
+
+	.paper-body,
+	.paper-headers {
+		padding: 0;
 
 		.email-header {
 			@apply
 				flex
 				items-start
 				gap-4
-				px-6
-				pt-6
 				;
-
-			> .left {
-				@apply
-					grow
-					relative
-					flex
-					flex-col
-					items-start
-					gap-2
-					;
-
-				> div {
-					@apply
-						flex
-						items-start
-						gap-2
-						;
-
-					+ div::before {
-						@apply
-							content-['']
-							absolute
-							w-[calc(100%)]
-							-mt-1
-							-ml-2
-							border-t
-							border-gray-200
-							;
-					}
-
-					> .email-header-key {
-						@apply
-							font-bold
-							flex-shrink-0
-							;
-					}
-
-					> div > :global(span) {
-						@apply
-							text-gray-400
-							;
-					}
-				}
-			}
+			padding-inline: calc(1.5rem - var(--paper-inset));
+			padding-top: calc(1rem - var(--paper-inset));
 
 			> .right {
 				@apply
 					relative
 					flex
 					flex-col
-					items-start
+					items-stretch
 					gap-2
 					;
 
@@ -713,6 +693,15 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 					}
 				}
 			}
+		}
+
+		.email-header-other {
+			@apply
+				border-t
+				border-gray-200
+				;
+			padding-top: calc(1rem - var(--paper-inset));
+			padding-bottom: calc(1.5rem - var(--paper-inset));
 		}
 
 		.email-frame {
@@ -813,6 +802,8 @@ function getHtml(emlData: Record<string, any>, allowRemote: boolean): string
 				flex-col
 				items-start
 				;
+			min-width: 0;
+			overflow-wrap: anywhere;
 		}
 	}
 }
